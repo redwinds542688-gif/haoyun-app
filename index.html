@@ -104,9 +104,9 @@ function cross(bar,mx,O,needPair,O2){const OB=O2||O;const w=z=>((z-1)%mx+mx)%mx+
  const ks=Object.keys(c2).map(Number);let S2=[];if(ks.length){const lv=[];ks.forEach(k=>{if(lv.indexOf(c2[k])<0)lv.push(c2[k])});lv.sort((x,y)=>y-x);while(lv.length>1&&ks.filter(k=>lv.indexOf(c2[k])>=0).length>18)lv.pop();S2=ks.filter(k=>lv.indexOf(c2[k])>=0).sort((x,y)=>c2[y]-c2[x]||x-y)}
  return{L,S3:S2.slice(0,3)}}
 const GAMES={
- '539':{name:'539',mx:39,dr:5,sp:false,K:5,rnd3:1-Math.pow(34/39,3)},
+ '539':{name:'539',mx:39,dr:5,sp:false,K:5,avg:true,rnd3:1-Math.pow(34/39,3)},
  mark6:{name:'六合彩',mx:49,dr:6,sp:true,K:3,rnd3:1-Math.pow(43/49,3)},
- daily:{name:'天天樂',mx:39,dr:5,sp:false,K:5,rnd3:1-Math.pow(34/39,3)},
+ daily:{name:'天天樂',mx:39,dr:5,sp:false,K:5,avg:true,rnd3:1-Math.pow(34/39,3)},
  lotto:{name:'大樂透',mx:49,dr:6,sp:true,K:5,rnd3:1-Math.pow(43/49,3)}};
 function Comb(n,k){if(k<0||k>n)return 0;let r=1;for(let i=0;i<k;i++)r=r*(n-i)/(i+1);return r}
 function makeEngine(gk,rows,trackStartDate){
@@ -123,8 +123,8 @@ function makeEngine(gk,rows,trackStartDate){
  const rk={};function rank(b){if(rk[b])return rk[b];const R=M.map((m,k)=>{const r30=rate(k,b-32,b-3);const tr=trackRate(k,b);const sc=tr===null?r30:0.7*r30+0.3*tr;return{k,r30,tr,sc,r100:null}});
   R.sort((x,y)=>{if(y.sc!==x.sc)return y.sc-x.sc;if(x.r100===null)x.r100=rate(x.k,b-102,b-3);if(y.r100===null)y.r100=rate(y.k,b-102,b-3);return y.r100-x.r100});return rk[b]=R}
  // 每 10 期檢討：前 3 名 / 前 5 名
- function chooseK(b){if(T0<0)return G.K;const done=b-3-T0+1;const n10=Math.floor(Math.max(0,done)/10)*10;if(n10<10)return G.K;const res={};for(const K of[3,5]){let n=0,h=0;for(let i=T0;i<T0+n10;i++){const p=rankPick(i,K).top;n+=p.length;h+=hit3(p,i)}res[K]=n?h/n:0}return res[3]>res[5]?3:res[5]>res[3]?5:G.K}
- function rankPick(b,K){const R=rank(b);const used=[];const uniq=()=>new Set(used.flatMap(u=>u.g)).size;for(const o of R){if(used.length>=K&&uniq()>=3)break;/* 2026-10-07 使用者：排行不足 3 顆時繼續往下一名找，直到湊滿 3 顆 */let g=get(o.k,b),s=false;if(!g.length){g=split(o.k,b);s=true}if(g.length)used.push({o,g,s})}
+ function chooseK(b){if(T0<0||G.avg)return G.K;const done=b-3-T0+1;const n10=Math.floor(Math.max(0,done)/10)*10;if(n10<10)return G.K;const res={};for(const K of[3,5]){let n=0,h=0;for(let i=T0;i<T0+n10;i++){const p=rankPick(i,K).top;n+=p.length;h+=hit3(p,i)}res[K]=n?h/n:0}return res[3]>res[5]?3:res[5]>res[3]?5:G.K}
+ function rankPick(b,K){const R=rank(b);const used=[];const uniq=()=>new Set(used.flatMap(u=>u.g)).size;/* 2026-10-07 使用者：539、天天樂(39 顆)改用「大於平均＋拆分」＝取所有分數高於 20 招平均的招式；六合彩、大樂透(49 顆)維持前 3／5 名 */const AVG=G.avg?R.reduce((a,o)=>a+o.sc,0)/R.length:null;for(const o of R){if(AVG!==null){if(o.sc<=AVG&&uniq()>=3)break}else if(used.length>=K&&uniq()>=3)break;/* 2026-10-07 使用者：排行不足 3 顆時繼續往下一名找，直到湊滿 3 顆 */let g=get(o.k,b),s=false;if(!g.length){g=split(o.k,b);s=true}if(g.length)used.push({o,g,s})}
   const c={},f={};used.forEach((u,q)=>u.g.forEach((v,z)=>{c[v]=(c[v]||0)+1;if(f[v]===undefined)f[v]=q*10+z}));const top=Object.keys(c).map(Number).sort((x,y)=>c[y]-c[x]||f[x]-f[y]).slice(0,3);return{top,used,c}}
  // 190 配對：同一期兩種方法各中至少 1 顆
  const P=[];for(let x=0;x<20;x++)for(let y=x+1;y<20;y++)P.push([x,y]);
@@ -289,7 +289,7 @@ build();sizes();render();addEventListener('resize',()=>{sizes()});setTimeout(syn
 <!--
 好運旺旺進財來 規則（2026-10-07 與使用者定案）
 一、方法 20 種：十字差(0,±1,±10)、同尾差(0,±10)、隔壁差(0,±1)、X差(0,±9,±11)；兩段組合 16 種取統計表前 3 顆，單用 4 種取第一段基數。繞回 539/天天樂 1~39、六合彩/大樂透 1~49；特別號不計命中。
-二、排行推薦：每期回溯 30 期，20 種方法依三期內開出率排名（同分看 100 期）；取前 5 名（六合彩前 3 名）。兩段組合無號碼時拆成第一段單用＋第二段單用一起統計取 3 顆，兩邊都無才跳下一名。依票數取前 3 顆，同票時排名高者優先；採用的方法合起來不足 3 顆時，繼續往下一名找，直到湊滿 3 顆。
+二、排行推薦：每期回溯 30 期，20 種方法依三期內開出率排名（同分看 100 期）；取前 5 名（六合彩前 3 名）；2026-10-07 起 539、天天樂改為取所有分數高於 20 招平均的招式（大於平均＋拆分），六合彩、大樂透維持原先。兩段組合無號碼時拆成第一段單用＋第二段單用一起統計取 3 顆，兩邊都無才跳下一名。依票數取前 3 顆，同票時排名高者優先；採用的方法合起來不足 3 顆時，繼續往下一名找，直到湊滿 3 顆。
 三、關聯推薦：每期回溯 30 期，190 組配對統計兩方法在同一期各中至少 1 顆的比例（兩方法皆有號碼至少 10 期）；從最高配對起取兩方法號碼聯集，任一方法無號碼就換下一組；2026-10-07 起固定 8 顆：不足 8 顆繼續加入下一組，超過 8 顆依票數取前 8 顆（配對全部用完仍不足才少於 8 顆）。
 資料：每次打開自動從爬蟲資料庫（lottery-data-gate 閘道）同步新期數，讀不到就用內建資料；新期數存在手機 localStorage。
 四、成效紀錄：自追蹤起點的下一期開始，不回填。排行推薦看三期內開出（未滿三期為觀察中）；關聯推薦看同期中幾顆，與同顆數隨機期望比較。
