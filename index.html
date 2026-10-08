@@ -51,9 +51,11 @@ body{margin:0;height:100%;background:var(--bg);color:var(--ink);overflow:hidden;
 .dr .sq.sp{border-color:var(--gold);color:var(--gold)}
 .rk .sq{background:linear-gradient(160deg,#F1F3F6,#AEB6C2);color:#1E2530;border:1px solid #8E97A5}
 .my{grid-row:span 2}
+.my .sq.sh1{margin-left:calc(var(--g)*2.5)}
+.shl{font-size:var(--fd);line-height:1.1;color:var(--gold);text-align:center;white-space:nowrap;margin:0 calc(var(--g)*.5)}
 .my .mid{gap:calc(var(--g)*2)}
 .my .sq.lz{outline-width:4px;outline-offset:2px}
-.my .sq{width:var(--s2);height:var(--s2);font-size:var(--fs2);border-radius:calc(var(--s2)*.14);background:linear-gradient(160deg,#F1F3F6,#AEB6C2);color:#1E2530;border:1px solid #8E97A5}
+.my .sq{width:var(--s3);height:var(--s3);font-size:var(--fs3);border-radius:calc(var(--s3)*.14);background:linear-gradient(160deg,#F1F3F6,#AEB6C2);color:#1E2530;border:1px solid #8E97A5}
 .rl .sq{background:linear-gradient(160deg,#F1F3F6,#AEB6C2);color:#1E2530;border:1px solid #8E97A5}
 .rk .sq.xj{background:linear-gradient(160deg,#F1F3F6,#AEB6C2);color:#1E2530;border:1px solid #8E97A5}
 
@@ -174,17 +176,19 @@ function makeEngine(gk,rows,trackStartDate){
  /* 2026-10-08 偏移（參考做法之一，第 7 組）：先算 6 組的推薦（基礎推薦），回頭看最近 10 期基礎推薦整組加減八卦輪差數
     （−11、−10、−9、−1、＋1、＋9、＋10、＋11）哪個方向下一期中最多；若比不偏移多、而且上一期基礎推薦一顆都沒中（準確失真）時，才把這期基礎推薦整組偏移過去當第 7 組。
     第 7 組的權重一樣用最近 30 期三期內開出率÷隨機自我檢討（0.5～1.5）。 */
- const RING=[-11,-10,-9,-1,1,9,10,11];const wrp=z=>((z-1)%G.mx+G.mx)%G.mx+1;const bsc={},shc={};
+ /* 2026-10-09 使用者：偏移以八卦輪為絕對主角，四種彩券都用八卦輪 8 個方向；同尾、隔壁、十字、X 差只做輔助參考，不取代八卦輪 */const RING=[-11,-10,-9,-1,1,9,10,11];const RING_SHOW=RING;const wrp=z=>((z-1)%G.mx+G.mx)%G.mx+1;const bsc={},shc={};
  function base(b){if(bsc[b])return bsc[b];const c=comp(b);return bsc[b]=myPick(b,c.groups,gw(b).W)}
- function shiftG(b){if(shc[b])return shc[b];const h1=(a,i)=>{const s=new Set(nums[i+1]);return a.filter(v=>s.has(v)).length};let bd=0,bh=-1;[0,...RING].forEach(d=>{let hh=0;for(let i=Math.max(40,b-10);i<=b-1;i++)hh+=h1(base(i).map(v=>wrp(v+d)),i);if(hh>bh){bh=hh;bd=d}});const miss=b-1>=40&&h1(base(b-1),b-1)===0;return shc[b]={d:bd,on:miss,g:(bd&&miss)?base(b).map(v=>wrp(v+bd)):[]}}
+ function shiftG(b){if(shc[b])return shc[b];return shc[b]=shiftWith(b,RING)}
+ const ssc={};function shiftShow(b){if(ssc[b])return ssc[b];return ssc[b]=RING_SHOW===RING?shiftG(b):shiftWith(b,RING_SHOW)}
+ function shiftWith(b,RG){const h1=(a,i)=>{const s=new Set(nums[i+1]);return a.filter(v=>s.has(v)).length};let bd=0,bh=-1;[0,...RG].forEach(d=>{let hh=0;for(let i=Math.max(40,b-10);i<=b-1;i++)hh+=h1(base(i).map(v=>wrp(v+d)),i);if(hh>bh){bh=hh;bd=d}});const miss=b-1>=40&&h1(base(b-1),b-1)===0;return{d:bd,on:miss,g:(bd&&miss)?base(b).map(v=>wrp(v+bd)):[]}}
  const w7c={};function w7(b){if(b in w7c)return w7c[b];let n=0,hh=0;for(let i=Math.max(52,b-32);i<=b-3;i++){const a=shiftG(i).g;const f=F3(i);n+=a.length;hh+=a.filter(v=>f.has(v)).length}return w7c[b]=n>=15?Math.max(0.5,Math.min(1.5,hh/n/G.rnd3)):1}
  const GN7=GN.concat(['偏移']);
- function recommend(b){const c=comp(b);const g=gw(b);const s=shiftG(b);const W=g.W.concat([w7(b)]);return Object.assign({},c,{W,WR:g.R,GN:GN7,shift:s,my:myPick(b,c.groups.concat([s.g]),W)})}
+ function recommend(b){const c=comp(b);const g=gw(b);const s=shiftG(b);/* 2026-10-09 偏移啟動（失真）那期，偏移組權重至少 1.5（回測 100／200 期，539、六合彩、天天樂都有進步） */const W=g.W.concat([s.g.length?Math.max(1.5,w7(b)):w7(b)]);return Object.assign({},c,{W,WR:g.R,GN:GN7,shift:s,show:shiftShow(b),my:myPick(b,c.groups.concat([s.g]),W)})}
  // 成效紀錄：追蹤單桿 T0..e-1（下一期已開）
  function records(){const out=[];if(T0<0)return out;for(let b=T0;b<e;b++){const r=recommend(b);const next=nums[b+1];const fut=nums.slice(b+1,b+4);
   const rk3=r.rank.top.map(v=>{let j=0;for(let q=0;q<fut.length;q++)if(fut[q].includes(v)){j=q+1;break}return{v,j}});const done=fut.length;
   const mk3=a=>a.map(v=>{let j=0;for(let q=0;q<fut.length;q++)if(fut[q].includes(v)){j=q+1;break}return{v,j}});
-  out.push({bar:rows[b],next:rows[b+1],K:r.K,rank:rk3,rankDone:done,xj:mk3(r.xj),ess:mk3(r.ess),nl:mk3(r.nl),my:mk3(r.my),sh:{on:r.shift.on,d:r.shift.d,g:mk3(r.shift.g)}})}return out}
+  out.push({bar:rows[b],next:rows[b+1],K:r.K,rank:rk3,rankDone:done,xj:mk3(r.xj),ess:mk3(r.ess),nl:mk3(r.nl),my:mk3(r.my),sh:{on:r.show.on,d:r.show.d,g:mk3(r.show.g)}})}return out}
  function summary(rec){const s={n:rec.length,r3n:0,r3h:0,x3n:0,x3h:0,e3n:0,e3h:0,n3n:0,n3h:0,m3n:0,m3h:0,s3n:0,s3h:0,son:0};rec.forEach(x=>{if(x.rankDone>=3){s.r3n+=x.rank.length;s.r3h+=x.rank.filter(y=>y.j).length;s.x3n+=x.xj.length;s.x3h+=x.xj.filter(y=>y.j).length;s.e3n+=x.ess.length;s.e3h+=x.ess.filter(y=>y.j).length;s.n3n+=x.nl.length;s.n3h+=x.nl.filter(y=>y.j).length;if(x.my){s.m3n+=x.my.length;s.m3h+=x.my.filter(y=>y.j).length}if(x.sh&&x.sh.g.length){s.son++;s.s3n+=x.sh.g.length;s.s3h+=x.sh.g.filter(y=>y.j).length}}});
   s.r3=s.r3n?s.r3h/s.r3n:null;s.x3=s.x3n?s.x3h/s.x3n:null;s.e3=s.e3n?s.e3h/s.e3n:null;s.n3=s.n3n?s.n3h/s.n3n:null;s.m3=s.m3n?s.m3h/s.m3n:null;s.s3=s.s3n?s.s3h/s.s3n:null;s.pauseNl=s.n3n>=60&&s.n3<G.rnd3;s.pauseRank=s.r3n>=60&&s.r3<G.rnd3;s.pauseXj=s.x3n>=60&&s.x3<G.rnd3;s.pauseRel=s.e3n>=60&&s.e3<G.rnd3;return s}
  return{G,rows,nums,e,M,recommend,records,summary,rank,rankPairs}}
@@ -261,7 +265,7 @@ function sizes(){const app=document.getElementById('app');const W=app.clientWidt
  const s=Math.floor(Math.min(H*0.84,(W-side-9*g-4-dW)/7.4));r.setProperty('--s',s+'px');
  const wr=probe('88','font-weight:700;font-size:100px;font-family:"Roboto Condensed","Arial Narrow","Noto Sans TC",sans-serif;font-variant-numeric:tabular-nums').width/100;
  r.setProperty('--fs',(Math.min(s*0.9,s*0.9/wr)).toFixed(1)+'px');
- const s2=Math.floor(Math.min(2*H*0.86,(W-side-6*g-8)/3.3));r.setProperty('--s2',s2+'px');r.setProperty('--fs2',(Math.min(s2*0.88,s2*0.9/wr)).toFixed(1)+'px')}
+ const s2=Math.floor(Math.min(2*H*0.86,(W-side-6*g-8)/3.3));r.setProperty('--s2',s2+'px');const s3=Math.floor(Math.min(2*H*0.86,(W-side-15*g-14)/6));r.setProperty('--s3',s3+'px');r.setProperty('--fs3',(Math.min(s3*0.9,s3*0.9/wr)).toFixed(1)+'px');r.setProperty('--fs2',(Math.min(s2*0.88,s2*0.9/wr)).toFixed(1)+'px')}
 /* 畫面只建立一次，之後換日期時只更新格子裡的數字（不重畫），捲動才會順 */
 const REF={};let moved=false;
 function build(){const app=document.getElementById('app');app.innerHTML='';
@@ -270,7 +274,7 @@ function build(){const app=document.getElementById('app');app.innerHTML='';
   const r1=el('div','row dr blk z-top zg-'+g);const sd=el('div','side');const nb=el('button','name');nb.innerHTML='<b>'+G.name+'</b>';nb.onclick=()=>{if(!moved)openSheet(g)};sd.appendChild(nb);r1.appendChild(sd);
   const m1=el('div','mid');R.dr=[];for(let i=0;i<G.dr;i++){const x=el('div','sq');m1.appendChild(x);R.dr.push(x)}if(G.sp){m1.appendChild(el('span','plus','+'));R.sp=el('div','sq sp');m1.appendChild(R.sp)}R.dt=el('small','dt','<span></span><span></span>');R.dt.onclick=()=>{if(!moved)openSheet(g)};m1.appendChild(R.dt);r1.appendChild(m1);
   const mk=(cls,lab,n,last)=>{const r=el('div','row '+cls+' blk zg-'+g+(last?' z-bot':''));const s=el('div','side');s.appendChild(el('span','lab'+(lab.indexOf('<br>')>=0?' two':''),lab));r.appendChild(s);const m=el('div','mid');const arr=[];for(let i=0;i<n;i++){const x=el('div','sq');m.appendChild(x);arr.push(x)}const none=el('span','none','無');m.appendChild(none);r.appendChild(m);const tag=el('span','tag','暫停參考');r.appendChild(tag);return{r,m,arr,none,tag}};
-  R.rk=mk('rk','排行',6);R.rk.arr.slice(3).forEach(x=>x.classList.add('xj'));R.rk.m.insertBefore(el('span','xjl','學距'),R.rk.arr[3]);R.rl=mk('rl','關聯',6);R.my=mk('my','推薦',3,true);R.rl.arr.slice(3).forEach(x=>x.classList.add('nl'));R.rl.m.insertBefore(el('span','xjl','非連'),R.rl.arr[3]);R.nb=nb;R.mids=[m1,R.my.m];
+  R.rk=mk('rk','排行',6);R.rk.arr.slice(3).forEach(x=>x.classList.add('xj'));R.rk.m.insertBefore(el('span','xjl','學距'),R.rk.arr[3]);R.rl=mk('rl','關聯',6);R.my=mk('my','推薦',6,true);R.shl=el('span','shl','');R.my.m.insertBefore(R.shl,R.my.arr[3]);R.my.arr[3].classList.add('sh1');R.rl.arr.slice(3).forEach(x=>x.classList.add('nl'));R.rl.m.insertBefore(el('span','xjl','非連'),R.rl.arr[3]);R.nb=nb;R.mids=[m1,R.my.m];
   /* 2026-10-08 使用者：主畫面只顯示「推薦」3 顆，一顆佔兩列高度放大；排行、學距、關聯、非連不顯示（仍照常計算，成效紀錄照記） */
   [r1,R.my.r].forEach(x=>app.appendChild(x));app.appendChild(el('div','row hr'));REF[g]=R});
  const c=el('div','row counts');[['lzs','','連莊牌'],['','#E0313D','下一期'],['','#2F6FEB','下二期'],['','#1E9E55','下三期']].forEach(a=>{const d=el('div','lgi','<i class="'+a[0]+'"'+(a[1]?' style="background:'+a[1]+'"':'')+'></i>'+a[2]);c.appendChild(d)});app.appendChild(c)}
@@ -290,7 +294,9 @@ function fill(g){const E=ENG[g],G=E.G,R=REF[g];const t=VIEW[g];const future=t>E.
  R.rk.arr.forEach((x,i)=>{const list=i<3?rec.rank.top:rec.xj;const v=list[i<3?i:i-3];if(v!==undefined){x.style.display='';x.textContent=p2(v);mark(x,v)}else x.style.display='none'});R.rk.none.style.display=rec.rank.top.length?'none':'';
  /* 2026-10-08 關聯那一列：前 3 格關聯（精華）、後 3 格非連（不含上一期開出的號碼） */
  R.rl.arr.forEach((x,i)=>{const list=i<3?rec.ess.slice().sort((a,b)=>a-b):rec.nl;const v=list[i<3?i:i-3];if(v!==undefined){x.style.display='';x.textContent=p2(v);mark(x,v)}else x.style.display='none'});R.rl.none.style.display=rec.ess.length?'none':'';
- put(R.my,rec.my);R.my.tag.style.display='none';
+ /* 2026-10-09 偏移啟動（上期推薦全沒中）時：第二列顯示推薦、第三列顯示偏移；推薦有中、不需要偏移時，恢復一顆佔兩列的大推薦 */
+ const sh=rec.show;const act=!!(sh&&sh.g&&sh.g.length);R.my.r.classList.toggle('act',act);R.shl.style.display='none';
+ R.my.arr.forEach((x,i)=>{const v=i<3?rec.my[i]:(act?sh.g[i-3]:undefined);if(v!==undefined){x.style.display='';x.textContent=p2(v);mark(x,v)}else x.style.display='none'});R.my.none.style.display=rec.my.length?'none':'';R.my.tag.style.display='none';
  R.rk.tag.style.display=future&&(sum.pauseRank||sum.pauseXj)?'':'none';R.rl.tag.style.display=future&&(sum.pauseRel||sum.pauseNl)?'':'none'}
 function render(){ORDER.forEach(fill)}
 function step(d){const v=Math.max(0,Math.min(KMAX,K-d));if(v!==K){K=v;applyCursor();render();return true}return false}
@@ -357,7 +363,9 @@ build();sizes();render();addEventListener('resize',()=>{sizes()});setTimeout(syn
 三之一、學距（2026-10-08 加入）：以上一期為單桿；先以上上期為單桿、上一～上六期各當基數，看上一期開出的號碼被哪幾組預測到，取被最多組預測到者的距離（只 1 組不用），再以上一期為單桿用這些距離各算一次，依出現組數→總票數→號碼小取前 3 顆，顯示在排行那一列後 3 格（紫色）。
 三之二、關聯精華（2026-10-08）：關聯推薦依票數取前 3 顆，取代原本第三列的 8 顆關聯。
 連莊牌（2026-10-08）：推薦號碼若是上一期（推薦所根據的最後一期）開出的號碼，加綠色外框；特別號不算。
-偏移（2026-10-08）：參考做法之一，當推薦的第 7 組。最近 10 期基礎推薦整組加減八卦輪差數，上一期推薦全沒中（失真）時，才把這期整組往最準的方向偏移；權重同樣每期自我檢討。
+偏移（2026-10-08）：參考做法之一，當推薦的第 7 組。最近 10 期基礎推薦整組加減八卦輪差數，上一期推薦全沒中（失真）時，才把這期整組往最準的方向偏移；權重同樣每期自我檢討；偏移啟動那期權重至少 1.5。
+偏移方向（2026-10-09）：四種彩券一律以八卦輪為主角（推薦交叉比對與主畫面偏移 3 顆都是）；其他差數即使回測較高，也只當輔助參考。依回測決定，自動依近期表現切換反而較差。
+偏移顯示（2026-10-09）：偏移啟動時，推薦 3 顆後面直接加上偏移 3 顆（中間不標任何文字，只空一點距離）；不管 3 顆或 6 顆，號碼大小都一樣，6 顆一起縮小到放得下；推薦有中、偏移停止時，恢復 3 顆大推薦。
 偏移期期監控（2026-10-08）：成效紀錄每期列出偏移狀態（未啟動／啟動方向與偏移後號碼與命中），總表另計偏移啟動期數與三期內命中率。
 推薦的自我檢討（2026-10-08）：每期回頭看 6 組最近 30 期三期內開出率÷隨機＝權重（0.5～1.5），出現在哪幾組就加那幾組的權重，最近準的組影響力大、不準的變小；成效紀錄上方顯示目前權重。
 推薦（2026-10-08）：主畫面每區只顯示推薦 3 顆（一顆佔兩列高度）；排行、學距、關聯、非連照常計算，只在成效紀錄顯示。排行、學距、關聯（精華）、非連、柱碰主牌、柱碰副牌 6 組放一起，依「出現在幾組→20 招有幾招推→號碼小」取前 3 顆；連莊牌可以選，但最多 1 顆。
