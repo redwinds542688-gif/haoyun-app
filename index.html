@@ -183,7 +183,14 @@ function makeEngine(gk,rows,trackStartDate){
  function shiftWith(b,RG){const h1=(a,i)=>{const s=new Set(nums[i+1]);return a.filter(v=>s.has(v)).length};let bd=0,bh=-1;[0,...RG].forEach(d=>{let hh=0;for(let i=Math.max(40,b-10);i<=b-1;i++)hh+=h1(base(i).map(v=>wrp(v+d)),i);if(hh>bh){bh=hh;bd=d}});const miss=b-1>=40&&h1(base(b-1),b-1)===0;return{d:bd,on:miss,g:(bd&&miss)?base(b).map(v=>wrp(v+bd)):[]}}
  const w7c={};function w7(b){if(b in w7c)return w7c[b];let n=0,hh=0;for(let i=Math.max(52,b-32);i<=b-3;i++){const a=shiftG(i).g;const f=F3(i);n+=a.length;hh+=a.filter(v=>f.has(v)).length}return w7c[b]=n>=15?Math.max(0.5,Math.min(1.5,hh/n/G.rnd3)):1}
  const GN7=GN.concat(['偏移']);
- function recommend(b){const c=comp(b);const g=gw(b);const s=shiftG(b);/* 2026-10-09 偏移啟動（失真）那期，偏移組權重至少 1.5（回測 100／200 期，539、六合彩、天天樂都有進步） */const W=g.W.concat([s.g.length?Math.max(1.5,w7(b)):w7(b)]);return Object.assign({},c,{W,WR:g.R,GN:GN7,shift:s,show:shiftShow(b),my:myPick(b,c.groups.concat([s.g]),W)})}
+ /* 2026-10-09 失真改看「主畫面實際顯示的推薦」：上一期顯示的推薦（含偏移影響）一顆都沒中，這期就啟動偏移。
+    為了不用從第一期一路算起，每期從 20 期前開始往後推（20 期前先用基礎推薦判斷），結果固定、不受捲動順序影響。
+    偏移啟動那期，偏移組權重至少 1.5。 */
+ const bdc={};function bestD(b){if(b in bdc)return bdc[b];const h1=(a,i)=>{const s=new Set(nums[i+1]);return a.filter(v=>s.has(v)).length};let bd=0,bh=-1;[0,...RING].forEach(d=>{let hh=0;for(let i=Math.max(40,b-10);i<=b-1;i++)hh+=h1(base(i).map(v=>wrp(v+d)),i);if(hh>bh){bh=hh;bd=d}});return bdc[b]=bd}
+ const missAt=(a,i)=>{const s=new Set(nums[i+1]||[]);return a.every(v=>!s.has(v))};
+ function step1(i,prevMiss){const c=comp(i);const g=gw(i);const d=bestD(i);const g7=(d&&prevMiss)?base(i).map(v=>wrp(v+d)):[];const W=g.W.concat([g7.length?Math.max(1.5,w7(i)):w7(i)]);return{d,on:prevMiss,g:g7,W,WR:g.R,my:myPick(i,c.groups.concat([g7]),W)}}
+ const fcc={};function finalAt(b){if(fcc[b])return fcc[b];let i=Math.max(41,b-20);let pm=missAt(base(i-1),i-1);let r=null;for(;i<=b;i++){r=step1(i,pm);pm=missAt(r.my,i)}return fcc[b]=r}
+ function recommend(b){const c=comp(b);const f=finalAt(b);const s={d:f.d,on:f.on,g:f.g};return Object.assign({},c,{W:f.W,WR:f.WR,GN:GN7,shift:s,show:s,my:f.my})}
  // 成效紀錄：追蹤單桿 T0..e-1（下一期已開）
  function records(){const out=[];if(T0<0)return out;for(let b=T0;b<e;b++){const r=recommend(b);const next=nums[b+1];const fut=nums.slice(b+1,b+4);
   const rk3=r.rank.top.map(v=>{let j=0;for(let q=0;q<fut.length;q++)if(fut[q].includes(v)){j=q+1;break}return{v,j}});const done=fut.length;
