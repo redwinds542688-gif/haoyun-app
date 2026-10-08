@@ -40,17 +40,24 @@ body{margin:0;height:100%;background:var(--bg);color:var(--ink);overflow:hidden;
 .side{flex:0 0 var(--side);display:flex;align-items:center;min-width:0;overflow:hidden}
 .name{border:0;background:none;padding:0;color:var(--ink);font:inherit;cursor:pointer;text-align:left;display:flex;align-items:center;gap:.2em;white-space:nowrap}
 .name b{display:inline-block;min-width:var(--nw);font-size:var(--fn);font-weight:700;line-height:1.1;text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:3px;white-space:nowrap}
-.name small{font-size:var(--fd);white-space:nowrap;color:var(--mute);line-height:1.05;display:flex;flex-direction:column;align-items:flex-start}
-.name small.past{color:var(--gold)}
+.dt{margin-left:calc(var(--g)*1.5);font-size:var(--fd);white-space:nowrap;color:var(--mute);line-height:1.05;display:flex;flex-direction:column;align-items:flex-start}
+.dt.past{color:var(--gold)}
+.xjl{font-size:var(--fl);line-height:1;color:var(--mute);white-space:nowrap;margin:0 calc(var(--g)*.5)}
 .name:focus-visible,.close:focus-visible{outline:2px solid var(--gold);outline-offset:2px;border-radius:4px}
 .lab{font-size:var(--fl);color:var(--mute);white-space:nowrap}
 .mid{flex:1;display:flex;justify-content:flex-start;will-change:transform,opacity;align-items:center;gap:var(--g);min-width:0}
 .sq{width:var(--s);height:var(--s);border-radius:calc(var(--s)*.14);overflow:hidden;display:flex;align-items:center;justify-content:center;font-weight:700;font-family:"Roboto Condensed","Arial Narrow","Noto Sans TC",sans-serif;font-size:var(--fs);line-height:1;letter-spacing:0;font-variant-numeric:tabular-nums;flex:0 0 auto}
 .dr .sq{border:1.5px solid var(--boxline);background:var(--box)}
 .dr .sq.sp{border-color:var(--gold);color:var(--gold)}
-.rk .sq{background:linear-gradient(160deg,var(--gold2),var(--gold));color:#3A2500}
-.rl .sq{border:2px solid var(--jade);color:var(--jade);background:var(--panel)}
-.sq.hit{background:var(--red)!important;border-color:var(--red)!important;color:#fff!important}
+.rk .sq{background:linear-gradient(160deg,#F1F3F6,#AEB6C2);color:#1E2530;border:1px solid #8E97A5}
+.rl .sq{background:linear-gradient(160deg,#F1F3F6,#AEB6C2);color:#1E2530;border:1px solid #8E97A5}
+.rk .sq.xj{background:linear-gradient(160deg,#F1F3F6,#AEB6C2);color:#1E2530;border:1px solid #8E97A5}
+
+.lab.two{font-size:calc(var(--fl)*.6);line-height:1.08;white-space:normal}
+.sq.lz{outline:3px solid #22E06A;outline-offset:1px}
+.sq.hit1{background:#E0313D!important;border-color:#E0313D!important;color:#fff!important}
+.sq.hit2{background:#2F6FEB!important;border-color:#2F6FEB!important;color:#fff!important}
+.sq.hit3{background:#1E9E55!important;border-color:#1E9E55!important;color:#fff!important}
 .plus{color:var(--mute);font-size:calc(var(--s)*.4);line-height:1}
 .tag{position:absolute;right:0;font-size:10px;color:var(--red);border:1px solid var(--red);border-radius:4px;padding:0 3px;white-space:nowrap}
 .none{font-size:12px;color:var(--mute)}
@@ -58,6 +65,9 @@ body{margin:0;height:100%;background:var(--bg);color:var(--ink);overflow:hidden;
 .blk.z-top{border-radius:10px 10px 0 0}.blk.z-bot{border-radius:0 0 10px 10px}
 .zg-539{--zone:var(--z1)}.zg-mark6{--zone:var(--z2)}.zg-daily{--zone:var(--z3)}.zg-lotto{--zone:var(--z4)}
 .counts{justify-content:space-between}
+.lgi{display:flex;align-items:center;gap:.3em;font-size:var(--fc);color:var(--ink);white-space:nowrap;line-height:1}
+.lgi i{display:inline-block;width:.95em;height:.95em;border-radius:.18em}
+.lgi i.lzs{background:linear-gradient(160deg,#F1F3F6,#AEB6C2);outline:.14em solid #22E06A;outline-offset:.06em;margin:0 .12em}
 .cnt{border:0;background:none;color:var(--ink);font:inherit;display:flex;align-items:baseline;gap:.3em;cursor:pointer;padding:0 2px;white-space:nowrap;line-height:1}
 .cnt b{font-size:var(--fc);font-variant-numeric:tabular-nums}
 .cnt span{color:var(--mute);font-size:var(--fcl)}
@@ -68,7 +78,7 @@ body{margin:0;height:100%;background:var(--bg);color:var(--ink);overflow:hidden;
 .sh-head h2{margin:0;font-size:18px}
 .close{border:1px solid var(--line);background:var(--panel);color:var(--ink);font:inherit;font-size:14px;border-radius:8px;padding:6px 14px;cursor:pointer}
 .sh-body{flex:1;overflow-y:auto;padding:12px 14px calc(env(safe-area-inset-bottom,0px) + 20px);max-width:560px;width:100%;margin:0 auto}
-.sum{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.sum{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:14px}
 .sum div{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px}
 .sum h3{margin:0 0 4px;font-size:13px;color:var(--mute);font-weight:500}
 .sum p{margin:0;font-size:15px;line-height:1.5}
@@ -79,7 +89,8 @@ body{margin:0;height:100%;background:var(--bg);color:var(--ink);overflow:hidden;
 .rec .ln{display:flex;align-items:center;gap:6px;margin:4px 0;flex-wrap:wrap}
 .rec .ln>span:first-child{flex:0 0 64px;font-size:12px;color:var(--mute)}
 .mb{position:relative;width:30px;height:30px;border-radius:6px;font-size:17px!important;display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;border:1.5px solid var(--boxline);font-variant-numeric:tabular-nums}
-.mb.h{background:var(--red);border-color:var(--red);color:#fff}
+.mb.h1{background:#E0313D;border-color:#E0313D;color:#fff}.mb.h2{background:#2F6FEB;border-color:#2F6FEB;color:#fff}.mb.h3{background:#1E9E55;border-color:#1E9E55;color:#fff}
+.lg{display:inline-block;width:11px;height:11px;border-radius:3px;vertical-align:-1px;margin:0 3px 0 8px}
 .mb sup{position:absolute;top:-6px;right:-6px;font-size:10px;color:var(--red);font-weight:700}
 .mb.h sup{color:var(--red)}
 .res{font-size:12px;color:var(--mute)}
@@ -132,14 +143,20 @@ function makeEngine(gk,rows,trackStartDate){
  const rp={};function rankPairs(b){if(rp[b])return rp[b];const R=P.map(([x,y])=>{const a=cohit(x,y,b-30,b-1);let sc=a.both?a.co/a.both:0;let tr=null;if(T0>=0&&b-1>=T0){const t=cohit(x,y,T0,b-1);if(t.both>=10){tr=t.co/t.both;sc=0.7*sc+0.3*tr}}return{x,y,both:a.both,co:a.co,sc,tr}}).filter(o=>o.both>=10).sort((p,q)=>q.sc-p.sc||q.co-p.co);return rp[b]=R}
  function relPick(b){const R=rankPairs(b);const c={},f={};const used=[];for(const o of R){if(Object.keys(c).length>=8)break;/* 2026-10-07 使用者：關聯推薦固定 8 顆（湊到 8 顆以上再依票數取前 8） */const A=get(o.x,b),B=get(o.y,b);if(!A.length||!B.length)continue;used.push(o);[...A,...B].forEach((v,z)=>{c[v]=(c[v]||0)+1;if(f[v]===undefined)f[v]=used.length*10+z})}
   const ord=Object.keys(c).map(Number).sort((x,y)=>c[y]-c[x]||f[x]-f[y]).slice(0,8);return{nums:ord,used,c}}
- function recommend(b){const K=chooseK(b);return{K,rank:rankPick(b,K),rel:relPick(b)}}
+ /* 2026-10-08 學距：以 b 為單桿預測 b+1。先以 b-1 為單桿、上一～上六期各當基數，看 b 開出的號碼被哪幾組預測到；
+    取被最多組預測到的號碼的距離（只有 1 組的不用；同多組時距離合併），再以 b 為單桿、用這些距離各算一次，
+    依「出現幾組→總票數→號碼小」取前 3 顆。學到的距離不到 2 組時不出號碼。 */
+ const xc={};function XS(bi,k){const key=bi*10+k;if(key in xc)return xc[key];if(bi-k<0)return xc[key]={};const L=nums[bi-k],bar=nums[bi];const w=z=>((z-1)%G.mx+G.mx)%G.mx+1;const c={};L.forEach(X=>DS.forEach(d=>{if(bar.indexOf(w(X+d))>=0)L.forEach(Y=>{if(Y!==X){const t=w(Y+d);c[t]=(c[t]||0)+1}})}));return xc[key]=c}
+ function xjPick(b){if(b-7<0)return[];let best=0,O=new Set();nums[b].forEach(v=>{const o=[1,2,3,4,5,6].filter(k=>v in XS(b-1,k));if(o.length>best){best=o.length;O=new Set(o)}else if(o.length===best&&best>0)o.forEach(k=>O.add(k))});if(best<2)return[];
+  const grp={},tot={};O.forEach(k=>{const c=XS(b,k);for(const v in c){grp[v]=(grp[v]||0)+1;tot[v]=(tot[v]||0)+c[v]}});return Object.keys(grp).map(Number).sort((x,y)=>grp[y]-grp[x]||tot[y]-tot[x]||x-y).slice(0,3)}
+ function recommend(b){const K=chooseK(b);const rel=relPick(b);return{K,rank:rankPick(b,K),rel,ess:rel.nums.slice(0,3),xj:xjPick(b)}}
  // 成效紀錄：追蹤單桿 T0..e-1（下一期已開）
  function records(){const out=[];if(T0<0)return out;for(let b=T0;b<e;b++){const r=recommend(b);const next=nums[b+1];const fut=nums.slice(b+1,b+4);
   const rk3=r.rank.top.map(v=>{let j=0;for(let q=0;q<fut.length;q++)if(fut[q].includes(v)){j=q+1;break}return{v,j}});const done=fut.length;
-  const relHit=r.rel.nums.filter(v=>next.includes(v));let eg2=0;const u=r.rel.nums.length;for(let j=2;j<=G.dr;j++)eg2+=Comb(u,j)*Comb(G.mx-u,G.dr-j)/Comb(G.mx,G.dr);
-  out.push({bar:rows[b],next:rows[b+1],K:r.K,rank:rk3,rankDone:done,rel:r.rel.nums,relHit,eg2})}return out}
- function summary(rec){const s={n:rec.length,r3n:0,r3h:0,g2:0,eg2:0,g3:0};rec.forEach(x=>{if(x.rankDone>=3){s.r3n+=x.rank.length;s.r3h+=x.rank.filter(y=>y.j).length}if(x.relHit.length>=2)s.g2++;if(x.relHit.length>=3)s.g3++;s.eg2+=x.eg2});
-  s.r3=s.r3n?s.r3h/s.r3n:null;s.pauseRank=s.r3n>=60&&s.r3<G.rnd3;s.pauseRel=s.n>=20&&s.g2<s.eg2;return s}
+  const mk3=a=>a.map(v=>{let j=0;for(let q=0;q<fut.length;q++)if(fut[q].includes(v)){j=q+1;break}return{v,j}});
+  out.push({bar:rows[b],next:rows[b+1],K:r.K,rank:rk3,rankDone:done,xj:mk3(r.xj),ess:mk3(r.ess)})}return out}
+ function summary(rec){const s={n:rec.length,r3n:0,r3h:0,x3n:0,x3h:0,e3n:0,e3h:0};rec.forEach(x=>{if(x.rankDone>=3){s.r3n+=x.rank.length;s.r3h+=x.rank.filter(y=>y.j).length;s.x3n+=x.xj.length;s.x3h+=x.xj.filter(y=>y.j).length;s.e3n+=x.ess.length;s.e3h+=x.ess.filter(y=>y.j).length}});
+  s.r3=s.r3n?s.r3h/s.r3n:null;s.x3=s.x3n?s.x3h/s.x3n:null;s.e3=s.e3n?s.e3h/s.e3n:null;s.pauseRank=s.r3n>=60&&s.r3<G.rnd3;s.pauseXj=s.x3n>=60&&s.x3<G.rnd3;s.pauseRel=s.e3n>=60&&s.e3<G.rnd3;return s}
  return{G,rows,nums,e,M,recommend,records,summary,rank,rankPairs}}
 
 const TRACK_START={'539':'2026-10-06',mark6:'2026-10-06',daily:'2026-10-06',lotto:'2026-10-06'};
@@ -198,18 +215,20 @@ function sizes(){const app=document.getElementById('app');const W=app.clientWidt
  const FN=Math.min(20,H*0.48),FD0=Math.min(16,H*0.39);
  const nm=g=>ENG[g].G.name,dt=g=>nextDraw(g,ENG[g].rows[ENG[g].e][0]);
  const wdt=(g,fd)=>Math.max(probe('預測','font-size:'+px(fd)).width,probe('12/30','font-size:'+px(fd)).width);
- let side=0;ORDER.forEach(g=>{side=Math.max(side,probe(nm(g),'font-weight:700;font-size:'+px(FN)).width+wdt(g,FD0)+FN*0.2+4)});side=Math.ceil(side);
+ /* 2026-10-08 日期移到號碼後面，名稱欄只放彩券名 */
+ let side=0;ORDER.forEach(g=>{side=Math.max(side,probe(nm(g),'font-weight:700;font-size:'+px(FN)).width+6)});side=Math.ceil(side);
  /* 預測/日期：兩行放得下的最大字（高度上限 0.43 列高，寬度不超出名稱欄） */
- let FD=H*0.43;ORDER.forEach(g=>{const room=side-4-FN*0.2-probe(nm(g),'font-weight:700;font-size:'+px(FN)).width;const w=wdt(g,FD0);FD=Math.min(FD,FD0*room/w)});FD=Math.max(FD0,FD);
+ const FD=Math.min(H*0.4,17);const dW=Math.max(...ORDER.map(g=>wdt(g,FD)));
  /* 排行／關聯：名稱欄寬內最大，高度上限 0.7 列高 */
- const FL=Math.min(H*0.7,(side-6)/(probe('關聯','font-size:100px').width/100));
+ const FL=Math.min(H*0.7,(side-10)/(probe('關聯','font-size:100px').width/100));
  /* 最下面筆數：四組排一行剛好放滿寬度 */
- let wc=0;ORDER.forEach(g=>{wc+=probe(nm(g),'font-size:100px').width*0.75+probe(REC[g].length+' 筆','font-weight:700;font-size:100px').width+30});const FC=Math.min(H*0.75,(W-24)/(wc/100));
+ /* 2026-10-08 最下面改成顏色說明，一行放滿寬度 */
+ const wc=probe('連莊牌下一期下二期下三期','font-size:100px').width+4*130+60;const FC=Math.min(H*0.6,(W-12)/(wc/100));
  const FT=Math.min(H*0.92,W*0.92/(probe('好運旺旺進財來','font-weight:900;font-size:100px;letter-spacing:.08em;font-family:"Noto Serif TC","Songti TC",serif').width/100));
  r.setProperty('--ft',px(FT));r.setProperty('--fn',px(FN));r.setProperty('--fd',px(FD));r.setProperty('--fl',px(FL));r.setProperty('--fc',px(FC));r.setProperty('--fcl',px(FC*0.75));
  r.setProperty('--side',side+'px');/* 名稱固定寬度＝最長的彩券名，讓四種彩券的日期對齊 */r.setProperty('--nw',Math.ceil(Math.max(...ORDER.map(g=>probe(nm(g),'font-weight:700;font-size:'+px(FN)).width)))+'px');
  const g=Math.max(3,Math.round(W*0.01));r.setProperty('--g',g+'px');
- const s=Math.floor(Math.min(H*0.84,(W-side-7*g-H*0.4)/8));r.setProperty('--s',s+'px');
+ const s=Math.floor(Math.min(H*0.84,(W-side-9*g-4-dW)/7.4));r.setProperty('--s',s+'px');
  const wr=probe('88','font-weight:700;font-size:100px;font-family:"Roboto Condensed","Arial Narrow","Noto Sans TC",sans-serif;font-variant-numeric:tabular-nums').width/100;
  r.setProperty('--fs',(Math.min(s*0.9,s*0.9/wr)).toFixed(1)+'px')}
 /* 畫面只建立一次，之後換日期時只更新格子裡的數字（不重畫），捲動才會順 */
@@ -217,21 +236,28 @@ const REF={};let moved=false;
 function build(){const app=document.getElementById('app');app.innerHTML='';
  const t=el('div','row title');t.appendChild(el('h1','','好運旺旺進財來'));app.appendChild(t);app.appendChild(el('div','row hr'));
  ORDER.forEach(g=>{const G=ENG[g].G;const R={};
-  const r1=el('div','row dr blk z-top zg-'+g);const sd=el('div','side');const nb=el('button','name');nb.innerHTML='<b>'+G.name+'</b><small><span></span><span></span></small>';nb.onclick=()=>{if(!moved)openSheet(g)};sd.appendChild(nb);r1.appendChild(sd);
-  const m1=el('div','mid');R.dr=[];for(let i=0;i<G.dr;i++){const x=el('div','sq');m1.appendChild(x);R.dr.push(x)}if(G.sp){m1.appendChild(el('span','plus','+'));R.sp=el('div','sq sp');m1.appendChild(R.sp)}r1.appendChild(m1);
-  const mk=(cls,lab,n,last)=>{const r=el('div','row '+cls+' blk zg-'+g+(last?' z-bot':''));const s=el('div','side');s.appendChild(el('span','lab',lab));r.appendChild(s);const m=el('div','mid');const arr=[];for(let i=0;i<n;i++){const x=el('div','sq');m.appendChild(x);arr.push(x)}const none=el('span','none','無');m.appendChild(none);r.appendChild(m);const tag=el('span','tag','暫停參考');r.appendChild(tag);return{r,m,arr,none,tag}};
-  R.rk=mk('rk','排行',3);R.rl=mk('rl','關聯',8,true);R.nb=nb;R.mids=[m1,R.rk.m,R.rl.m];
+  const r1=el('div','row dr blk z-top zg-'+g);const sd=el('div','side');const nb=el('button','name');nb.innerHTML='<b>'+G.name+'</b>';nb.onclick=()=>{if(!moved)openSheet(g)};sd.appendChild(nb);r1.appendChild(sd);
+  const m1=el('div','mid');R.dr=[];for(let i=0;i<G.dr;i++){const x=el('div','sq');m1.appendChild(x);R.dr.push(x)}if(G.sp){m1.appendChild(el('span','plus','+'));R.sp=el('div','sq sp');m1.appendChild(R.sp)}R.dt=el('small','dt','<span></span><span></span>');R.dt.onclick=()=>{if(!moved)openSheet(g)};m1.appendChild(R.dt);r1.appendChild(m1);
+  const mk=(cls,lab,n,last)=>{const r=el('div','row '+cls+' blk zg-'+g+(last?' z-bot':''));const s=el('div','side');s.appendChild(el('span','lab'+(lab.indexOf('<br>')>=0?' two':''),lab));r.appendChild(s);const m=el('div','mid');const arr=[];for(let i=0;i<n;i++){const x=el('div','sq');m.appendChild(x);arr.push(x)}const none=el('span','none','無');m.appendChild(none);r.appendChild(m);const tag=el('span','tag','暫停參考');r.appendChild(tag);return{r,m,arr,none,tag}};
+  R.rk=mk('rk','排行',6);R.rk.arr.slice(3).forEach(x=>x.classList.add('xj'));R.rk.m.insertBefore(el('span','xjl','學距'),R.rk.arr[3]);R.rl=mk('rl','關聯',3,true);R.nb=nb;R.mids=[m1,R.rk.m,R.rl.m];
   [r1,R.rk.r,R.rl.r].forEach(x=>app.appendChild(x));app.appendChild(el('div','row hr'));REF[g]=R});
- const c=el('div','row counts');ORDER.forEach(g=>{const b=el('button','cnt');b.innerHTML='<span>'+ENG[g].G.name+'</span><b>'+REC[g].length+' 筆</b>';b.setAttribute('aria-label',ENG[g].G.name+' 成效紀錄 '+REC[g].length+' 筆');b.onclick=()=>{if(!moved)openSheet(g)};c.appendChild(b)});app.appendChild(c)}
+ const c=el('div','row counts');[['lzs','','連莊牌'],['','#E0313D','下一期'],['','#2F6FEB','下二期'],['','#1E9E55','下三期']].forEach(a=>{const d=el('div','lgi','<i class="'+a[0]+'"'+(a[1]?' style="background:'+a[1]+'"':'')+'></i>'+a[2]);c.appendChild(d)});app.appendChild(c)}
 const RC={};function recAt(g,bar){const k=g+'_'+bar;if(!RC[k])RC[k]=ENG[g].recommend(bar);return RC[k]}
 function fill(g){const E=ENG[g],G=E.G,R=REF[g];const t=VIEW[g];const future=t>E.e;const rec=recAt(g,t-1);const sum=E.summary(REC[g]);
  const drawn=future?null:E.rows[t];const dateTxt=future?nextDraw(g,E.rows[E.e][0]):md(E.rows[t][0]);const hs=new Set(drawn?drawn[1]:[]);
- const sm=R.nb.querySelector('small');sm.className=future?'':'past';sm.children[0].textContent='預測';sm.children[0].style.display=future?'':'none';sm.children[1].textContent=dateTxt;
+ /* 2026-10-08 開出顏色：第一期紅、第二期藍、第三期綠（以最早開出的那期為準） */
+ const futs=[0,1,2].map(k=>t+k<=E.e?new Set(E.rows[t+k][1]):new Set());const hk=v=>futs[0].has(v)?1:futs[1].has(v)?2:futs[2].has(v)?3:0;
+ const prev=new Set(t-1>=0?E.rows[t-1][1]:[]);
+ /* 2026-10-08 連莊牌（上一期開出的號碼）加綠色外框 */
+ const mark=(x,v)=>{const k=hk(v);[1,2,3].forEach(j=>x.classList.toggle('hit'+j,k===j));x.classList.toggle('lz',prev.has(v))};
+ const sm=R.dt;sm.className='dt'+(future?'':' past');sm.children[0].textContent='預測';sm.children[0].style.display=future?'':'none';sm.children[1].textContent=dateTxt;
  R.nb.setAttribute('aria-label',G.name+(future?' 預測 ':' ')+dateTxt+'，點一下看成效紀錄');
  R.dr.forEach((x,i)=>x.textContent=drawn?p2(drawn[1][i]):'');if(R.sp)R.sp.textContent=drawn&&drawn[2]!=null?p2(drawn[2]):'';
- const put=(o,list)=>{o.arr.forEach((x,i)=>{if(i<list.length){x.style.display='';x.textContent=p2(list[i]);x.classList.toggle('hit',hs.has(list[i]))}else x.style.display='none'});o.none.style.display=list.length?'none':''};
- put(R.rk,rec.rank.top);put(R.rl,rec.rel.nums.slice().sort((a,b)=>a-b));
- R.rk.tag.style.display=future&&sum.pauseRank?'':'none';R.rl.tag.style.display=future&&sum.pauseRel?'':'none'}
+ const put=(o,list)=>{o.arr.forEach((x,i)=>{if(i<list.length){x.style.display='';x.textContent=p2(list[i]);mark(x,list[i])}else x.style.display='none'});o.none.style.display=list.length?'none':''};
+ /* 2026-10-08 排行那一列：前 3 格排行（金）、後 3 格學距（紫）；第三列改為關聯精華（關聯票數前 3 顆） */
+ R.rk.arr.forEach((x,i)=>{const list=i<3?rec.rank.top:rec.xj;const v=list[i<3?i:i-3];if(v!==undefined){x.style.display='';x.textContent=p2(v);mark(x,v)}else x.style.display='none'});R.rk.none.style.display=rec.rank.top.length?'none':'';
+ put(R.rl,rec.ess.slice().sort((a,b)=>a-b));
+ R.rk.tag.style.display=future&&(sum.pauseRank||sum.pauseXj)?'':'none';R.rl.tag.style.display=future&&sum.pauseRel?'':'none'}
 function render(){ORDER.forEach(fill)}
 function step(d){const v=Math.max(0,Math.min(KMAX,K-d));if(v!==K){K=v;applyCursor();render();return true}return false}
 /* 背景預先算好以前日期的推薦，捲動時不必等計算 */
@@ -240,8 +266,11 @@ let warmK=1;function warm(){let n=0;while(warmK<=KMAX&&n<4){ORDER.forEach(g=>{co
 const app0=document.getElementById('app');let drag=null,mom=null;
 const SP=()=>Math.max(30,app0.clientHeight/19*1.1);
 function offset(px){const S=SP();const k=Math.min(1,Math.abs(px)/(S*0.5));ORDER.forEach(g=>REF[g].mids.forEach(m=>{m.style.transform=px?'translateY('+px.toFixed(1)+'px)':'';m.style.opacity=px?(1-0.55*k).toFixed(2):''}))}
-function advance(st){const S=SP();while(st.acc>S/2||st.acc<-S/2){const dir=st.acc>0?-1:1;if(!step(dir)){st.acc=Math.max(-S*0.18,Math.min(S*0.18,st.acc));st.v=0;break}st.acc+=dir===-1?-S:S}offset(st.acc)}
-function settle(st){const t0=performance.now(),a0=st.acc;const f=now=>{const k=Math.min(1,(now-t0)/160);st.acc=a0*(1-k*(2-k));offset(st.acc);if(k<1)mom=requestAnimationFrame(f);else{mom=null;offset(0)}};mom=requestAnimationFrame(f)}
+/* 2026-10-08 到最新一期或最舊一期時改成橡皮筋阻力，不再來回跳動（原本夾住位移造成顫抖） */
+function canStep(d){const v=K-d;return v>=0&&v<=KMAX}
+function shown(a){if(!a||canStep(a>0?-1:1))return a;const S=SP();return Math.sign(a)*S*0.22*(1-Math.exp(-Math.abs(a)/(S*0.7)))}
+function advance(st){const S=SP();while(st.acc>S/2||st.acc<-S/2){const dir=st.acc>0?-1:1;if(!canStep(dir)){st.v=0;break}step(dir);st.acc+=dir===-1?-S:S}if(st.acc&&!canStep(st.acc>0?-1:1))st.v=0;offset(shown(st.acc))}
+function settle(st){const t0=performance.now(),a0=st.acc;const f=now=>{const k=Math.min(1,(now-t0)/160);st.acc=a0*(1-k*(2-k));offset(shown(st.acc));if(k<1)mom=requestAnimationFrame(f);else{mom=null;offset(0)}};mom=requestAnimationFrame(f)}
 let rest=0;
 app0.addEventListener('touchstart',e=>{if(mom){cancelAnimationFrame(mom);mom=null}moved=false;const y=e.touches[0].clientY;drag={last:y,t:performance.now(),v:0,acc:rest,tot:0}},{passive:true});
 app0.addEventListener('touchmove',e=>{if(!drag)return;const y=e.touches[0].clientY,now=performance.now();const d=y-drag.last;const dt=Math.max(1,now-drag.t);drag.v=0.7*(d/dt)+0.3*drag.v;drag.last=y;drag.t=now;drag.acc+=d;drag.tot+=Math.abs(d);if(drag.tot>8)moved=true;advance(drag);e.preventDefault()},{passive:false});
@@ -251,12 +280,11 @@ app0.addEventListener('touchend',()=>{if(!drag)return;const st={acc:drag.acc,v:p
 let wacc=0,wt=null;app0.addEventListener('wheel',e=>{e.preventDefault();const st={acc:wacc-e.deltaY*0.6,v:0};advance(st);wacc=st.acc;clearTimeout(wt);wt=setTimeout(()=>{settle(st);wacc=0},140)},{passive:false});
 const circ=['','①','②','③'];
 function openSheet(g){const E=ENG[g],G=E.G,rec=REC[g],s=E.summary(rec);document.getElementById('shTitle').textContent=G.name+' 成效紀錄';const body=document.getElementById('shBody');
- let h='<p class="res" style="margin:0 0 10px">資料到 '+md(E.rows[E.e][0])+'（'+SYNC_NOTE+'）</p><div class="sum"><div><h3>排行</h3><p>'+(s.r3n?(100*s.r3).toFixed(1)+'%':'—')+' <small>三期內開出</small></p><small>'+s.r3h+'/'+s.r3n+' 顆，隨機 '+(100*G.rnd3).toFixed(1)+'%</small></div>'+
-  '<div><h3>關聯</h3><p>'+s.g2+' 期 <small>同期中 2 顆以上</small></p><small>隨機約 '+s.eg2.toFixed(1)+' 期，共 '+s.n+' 筆</small></div></div>';
+ let h='<p class="res" style="margin:0 0 10px">資料到 '+md(E.rows[E.e][0])+'（'+SYNC_NOTE+'）</p><div class="sum">'+[['排行',s.r3,s.r3h,s.r3n],['學距',s.x3,s.x3h,s.x3n],['關聯',s.e3,s.e3h,s.e3n]].map(a=>'<div><h3>'+a[0]+'</h3><p>'+(a[3]?(100*a[1]).toFixed(1)+'%':'—')+'</p><small>三期內 '+a[2]+'/'+a[3]+' 顆</small></div>').join('')+'</div><p class="res" style="margin:-6px 0 10px">隨機 '+(100*G.rnd3).toFixed(1)+'%，共 '+s.n+' 筆</p><p class="res" style="margin:-6px 0 10px">開出：<i class="lg" style="background:#E0313D"></i>下一期<i class="lg" style="background:#2F6FEB"></i>下二期<i class="lg" style="background:#1E9E55"></i>下三期</p>';
  if(!rec.length){h+='<p class="empty">從 '+nextDraw(g,TRACK_START[g])+' 這一期開始記錄。開獎號碼加入後，這裡就會出現第一筆。</p>'}
  rec.slice().reverse().forEach(r=>{h+='<div class="rec"><div class="d">預測 <b>'+md(r.next[0])+'</b>　開出 '+r.next[1].map(p2).join(' ')+(r.next[2]!=null?' +'+p2(r.next[2]):'')+'</div>';
-  h+='<div class="ln"><span>排行</span>'+r.rank.map(x=>'<span class="mb'+(x.j?' h':'')+'">'+p2(x.v)+(x.j?'<sup>'+circ[x.j]+'</sup>':'')+'</span>').join('')+'<span class="res">'+(r.rankDone<3?'觀察中（已開 '+r.rankDone+' 期）':'三期內中 '+r.rank.filter(x=>x.j).length+' 顆')+'</span></div>';
-  h+='<div class="ln"><span>關聯</span>'+r.rel.slice().sort((a,b)=>a-b).map(v=>'<span class="mb'+(r.relHit.includes(v)?' h':'')+'">'+p2(v)+'</span>').join('')+'<span class="res">同期中 '+r.relHit.length+' 顆</span></div></div>'});
+  const line=(nm,arr)=>'<div class="ln"><span>'+nm+'</span>'+(arr.length?arr.map(x=>'<span class="mb'+(x.j?' h'+x.j:'')+'">'+p2(x.v)+'</span>').join(''):'<span class="res">無</span>')+'<span class="res">'+(r.rankDone<3?'觀察中（已開 '+r.rankDone+' 期）':'三期內中 '+arr.filter(x=>x.j).length+' 顆')+'</span></div>';
+  h+=line('排行',r.rank)+line('學距',r.xj)+line('關聯',r.ess)+'</div>'});
  body.innerHTML=h;const sh=document.getElementById('sheet');sh.classList.add('open');document.getElementById('shClose').focus()}
 document.getElementById('shClose').onclick=()=>document.getElementById('sheet').classList.remove('open');
 document.addEventListener('keydown',e=>{if(e.key==='Escape')document.getElementById('sheet').classList.remove('open')});
@@ -292,6 +320,12 @@ build();sizes();render();addEventListener('resize',()=>{sizes()});setTimeout(syn
 二、排行推薦：每期回溯 30 期，20 種方法依三期內開出率排名（同分看 100 期）；取前 5 名（六合彩前 3 名）；2026-10-07 起 539、天天樂改為取所有分數高於 20 招平均的招式（大於平均＋拆分），六合彩、大樂透維持原先。兩段組合無號碼時拆成第一段單用＋第二段單用一起統計取 3 顆，兩邊都無才跳下一名。依票數取前 3 顆，同票時排名高者優先；採用的方法合起來不足 3 顆時，繼續往下一名找，直到湊滿 3 顆。
 三、關聯推薦：每期回溯 30 期，190 組配對統計兩方法在同一期各中至少 1 顆的比例（兩方法皆有號碼至少 10 期）；從最高配對起取兩方法號碼聯集，任一方法無號碼就換下一組；2026-10-07 起固定 8 顆：不足 8 顆繼續加入下一組，超過 8 顆依票數取前 8 顆（配對全部用完仍不足才少於 8 顆）。
 資料：每次打開自動從爬蟲資料庫（lottery-data-gate 閘道）同步新期數，讀不到就用內建資料；新期數存在手機 localStorage。
+三之一、學距（2026-10-08 加入）：以上一期為單桿；先以上上期為單桿、上一～上六期各當基數，看上一期開出的號碼被哪幾組預測到，取被最多組預測到者的距離（只 1 組不用），再以上一期為單桿用這些距離各算一次，依出現組數→總票數→號碼小取前 3 顆，顯示在排行那一列後 3 格（紫色）。
+三之二、關聯精華（2026-10-08）：關聯推薦依票數取前 3 顆，取代原本第三列的 8 顆關聯。
+連莊牌（2026-10-08）：推薦號碼若是上一期（推薦所根據的最後一期）開出的號碼，加綠色外框；特別號不算。
+版面（2026-10-08）：日期放在開獎號碼後面；排行列中間標示「學距」；第三列標示「關聯」（內容為關聯精華，關聯票數前 3 顆）。
+最下面一列（2026-10-08）：不再顯示成效紀錄筆數，改為顏色說明：綠框＝連莊牌、紅＝下一期、藍＝下二期、綠＝下三期；成效紀錄改由點彩券名稱或日期打開。
+顏色（2026-10-08）：排行、學距、關聯精華都用銀色；號碼開出時，第一期開紅色、第二期開藍色、第三期開綠色（以最早開出那期為準）。
 四、成效紀錄：自追蹤起點的下一期開始，不回填。排行推薦看三期內開出（未滿三期為觀察中）；關聯推薦看同期中幾顆，與同顆數隨機期望比較。
 五、成效回饋：方法與配對的追蹤實際命中滿 10 期後，排名分數＝回溯30期×0.7＋追蹤實際×0.3；每滿 10 期比較前 3 名與前 5 名的實際成效，較好者用於排行推薦；排行推薦累積滿 60 顆仍低於隨機、或關聯推薦滿 20 筆仍低於隨機期望，標示「暫停參考」。
 -->
