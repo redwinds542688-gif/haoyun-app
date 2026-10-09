@@ -176,7 +176,7 @@ function makeEngine(gk,rows,trackStartDate){
  /* 2026-10-08 偏移（參考做法之一，第 7 組）：先算 6 組的推薦（基礎推薦），回頭看最近 10 期基礎推薦整組加減八卦輪差數
     （−11、−10、−9、−1、＋1、＋9、＋10、＋11）哪個方向下一期中最多；若比不偏移多、而且上一期基礎推薦一顆都沒中（準確失真）時，才把這期基礎推薦整組偏移過去當第 7 組。
     第 7 組的權重一樣用最近 30 期三期內開出率÷隨機自我檢討（0.5～1.5）。 */
- /* 2026-10-09 使用者：偏移以八卦輪為絕對主角，四種彩券都用八卦輪 8 個方向；同尾、隔壁、十字、X 差只做輔助參考，不取代八卦輪 */const RING=[-11,-10,-9,-1,1,9,10,11];const RING_SHOW=RING;const wrp=z=>((z-1)%G.mx+G.mx)%G.mx+1;const bsc={},shc={};
+ /* 2026-10-09 使用者：偏移以八卦輪為絕對主角，四種彩券都用八卦輪 8 個方向；同尾、隔壁、十字、X 差只做輔助參考，不取代八卦輪 */let SH_FROM=1,SH_STEP=0.5,SH_CAP=3;const RING=[-11,-10,-9,-1,1,9,10,11];const RING_SHOW=RING;const wrp=z=>((z-1)%G.mx+G.mx)%G.mx+1;const bsc={},shc={};
  function base(b){if(bsc[b])return bsc[b];const c=comp(b);return bsc[b]=myPick(b,c.groups,gw(b).W)}
  function shiftG(b){if(shc[b])return shc[b];return shc[b]=shiftWith(b,RING)}
  const ssc={};function shiftShow(b){if(ssc[b])return ssc[b];return ssc[b]=RING_SHOW===RING?shiftG(b):shiftWith(b,RING_SHOW)}
@@ -188,8 +188,8 @@ function makeEngine(gk,rows,trackStartDate){
     偏移啟動那期，偏移組權重至少 1.5。 */
  const bdc={};function bestD(b){if(b in bdc)return bdc[b];const h1=(a,i)=>{const s=new Set(nums[i+1]);return a.filter(v=>s.has(v)).length};let bd=0,bh=-1;[0,...RING].forEach(d=>{let hh=0;/* 2026-10-09 使用者：越近的期數權重越重（最近一期 ×10、往前每期少 1、第 10 期 ×1） */for(let i=Math.max(40,b-10);i<=b-1;i++)hh+=h1(base(i).map(v=>wrp(v+d)),i)*(11-(b-i));if(hh>bh){bh=hh;bd=d}});return bdc[b]=bd}
  const missAt=(a,i)=>{const s=new Set(nums[i+1]||[]);return a.every(v=>!s.has(v))};
- function step1(i,prevMiss){const c=comp(i);const g=gw(i);const d=bestD(i);const g7=(d&&prevMiss)?base(i).map(v=>wrp(v+d)):[];const W=g.W.concat([g7.length?Math.max(1.5,w7(i)):w7(i)]);return{d,on:prevMiss,g:g7,W,WR:g.R,my:myPick(i,c.groups.concat([g7]),W)}}
- const fcc={};function finalAt(b){if(fcc[b])return fcc[b];let i=Math.max(41,b-20);let pm=missAt(base(i-1),i-1);let r=null;for(;i<=b;i++){r=step1(i,pm);pm=missAt(r.my,i)}return fcc[b]=r}
+ function step1(i,prevMiss,st){st=st||0;const c=comp(i);const g=gw(i);const d=bestD(i);const g7=(d&&prevMiss)?base(i).map(v=>wrp(v+d)):[];/* 2026-10-09 使用者：偏移連中時權重再往上提（所有彩券）。偏移上期有中起，每連中 1 期 +0.5（1.5→2→2.5→3），最高 3；回測 1 期起算比 2 期起算好 */const wb=Math.max(1.5,w7(i));const w=g7.length?Math.min(SH_CAP,wb+(st>=SH_FROM?SH_STEP*(st-SH_FROM+1):0)):w7(i);const W=g.W.concat([w]);return{d,on:prevMiss,g:g7,W,WR:g.R,st,my:myPick(i,c.groups.concat([g7]),W)}}
+ const fcc={};function finalAt(b){if(fcc[b])return fcc[b];let i=Math.max(41,b-20);let pm=missAt(base(i-1),i-1);let r=null,st=0;for(;i<=b;i++){r=step1(i,pm,st);pm=missAt(r.my,i);/* 偏移連中計數：這期偏移有中下一期就 +1，沒中或沒啟動歸 0 */st=(r.g.length&&!missAt(r.g,i))?st+1:0}return fcc[b]=r}
  function recommend(b){const c=comp(b);const f=finalAt(b);const s={d:f.d,on:f.on,g:f.g};return Object.assign({},c,{W:f.W,WR:f.WR,GN:GN7,shift:s,show:s,my:f.my})}
  // 成效紀錄：追蹤單桿 T0..e-1（下一期已開）
  function records(){const out=[];if(T0<0)return out;for(let b=T0;b<e;b++){const r=recommend(b);const next=nums[b+1];const fut=nums.slice(b+1,b+4);
@@ -432,6 +432,7 @@ build();sizes();render();addEventListener('resize',()=>{sizes()});setTimeout(syn
   - 爬蟲故障時可人工補登：在 Lottery-database 的 data.json 對應彩券陣列最前面加一筆
     （agreeing_sources 寫「使用者人工補登」），App 下次同步就會讀到。
   - 號碼錯了 → 修正 data.json 後，手機裡已存的錯誤期數需清除 App 的網站資料（localStorage）才會換掉。
+偏移連中加權（2026-10-09）：所有彩券一律。偏移啟動且上期偏移有中下一期，就算連中 1 期；偏移權重＝max(1.5, 偏移近 30 期表現)＋0.5×連中期數，最高 3（1.5→2→2.5→3）。偏移沒中或沒啟動就歸 0。回測近 200 期：下一期中 ≥1 支的比例 539 38.4→39.4%、天天樂 34.8→35.4%、六合彩 31.1→32.2%、大樂透持平。
 -->
 </body>
 </html>
