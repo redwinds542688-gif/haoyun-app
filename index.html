@@ -186,7 +186,7 @@ function makeEngine(gk,rows,trackStartDate){
  /* 2026-10-09 失真改看「主畫面實際顯示的推薦」：上一期顯示的推薦（含偏移影響）一顆都沒中，這期就啟動偏移。
     為了不用從第一期一路算起，每期從 20 期前開始往後推（20 期前先用基礎推薦判斷），結果固定、不受捲動順序影響。
     偏移啟動那期，偏移組權重至少 1.5。 */
- const bdc={};function bestD(b){if(b in bdc)return bdc[b];const h1=(a,i)=>{const s=new Set(nums[i+1]);return a.filter(v=>s.has(v)).length};let bd=0,bh=-1;[0,...RING].forEach(d=>{let hh=0;for(let i=Math.max(40,b-10);i<=b-1;i++)hh+=h1(base(i).map(v=>wrp(v+d)),i);if(hh>bh){bh=hh;bd=d}});return bdc[b]=bd}
+ const bdc={};function bestD(b){if(b in bdc)return bdc[b];const h1=(a,i)=>{const s=new Set(nums[i+1]);return a.filter(v=>s.has(v)).length};let bd=0,bh=-1;[0,...RING].forEach(d=>{let hh=0;/* 2026-10-09 使用者：越近的期數權重越重（最近一期 ×10、往前每期少 1、第 10 期 ×1） */for(let i=Math.max(40,b-10);i<=b-1;i++)hh+=h1(base(i).map(v=>wrp(v+d)),i)*(11-(b-i));if(hh>bh){bh=hh;bd=d}});return bdc[b]=bd}
  const missAt=(a,i)=>{const s=new Set(nums[i+1]||[]);return a.every(v=>!s.has(v))};
  function step1(i,prevMiss){const c=comp(i);const g=gw(i);const d=bestD(i);const g7=(d&&prevMiss)?base(i).map(v=>wrp(v+d)):[];const W=g.W.concat([g7.length?Math.max(1.5,w7(i)):w7(i)]);return{d,on:prevMiss,g:g7,W,WR:g.R,my:myPick(i,c.groups.concat([g7]),W)}}
  const fcc={};function finalAt(b){if(fcc[b])return fcc[b];let i=Math.max(41,b-20);let pm=missAt(base(i-1),i-1);let r=null;for(;i<=b;i++){r=step1(i,pm);pm=missAt(r.my,i)}return fcc[b]=r}
@@ -371,6 +371,7 @@ build();sizes();render();addEventListener('resize',()=>{sizes()});setTimeout(syn
 三之二、關聯精華（2026-10-08）：關聯推薦依票數取前 3 顆，取代原本第三列的 8 顆關聯。
 連莊牌（2026-10-08）：推薦號碼若是上一期（推薦所根據的最後一期）開出的號碼，加綠色外框；特別號不算。
 偏移（2026-10-08）：參考做法之一，當推薦的第 7 組。最近 10 期基礎推薦整組加減八卦輪差數，上一期推薦全沒中（失真）時，才把這期整組往最準的方向偏移；權重同樣每期自我檢討；偏移啟動那期權重至少 1.5。
+偏移方向的學習（2026-10-09）：回頭看 10 期時越近越重，最近一期 ×10、往前每期少 1、第 10 期 ×1。
 偏移方向（2026-10-09）：四種彩券一律以八卦輪為主角（推薦交叉比對與主畫面偏移 3 顆都是）；其他差數即使回測較高，也只當輔助參考。依回測決定，自動依近期表現切換反而較差。
 偏移顯示（2026-10-09）：偏移啟動時，推薦 3 顆後面直接加上偏移 3 顆（中間不標任何文字，只空一點距離）；不管 3 顆或 6 顆，號碼大小都一樣，6 顆一起縮小到放得下；推薦有中、偏移停止時，恢復 3 顆大推薦。
 偏移期期監控（2026-10-08）：成效紀錄每期列出偏移狀態（未啟動／啟動方向與偏移後號碼與命中），總表另計偏移啟動期數與三期內命中率。
