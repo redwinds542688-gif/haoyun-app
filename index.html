@@ -167,7 +167,7 @@ function makeEngine(gk,rows,trackStartDate){
   const L=Object.keys(cand).map(Number).sort((x,y)=>cand[y].n-cand[x].n||cand[y].j-cand[x].j||x-y);const main=L.filter(v=>cand[v].n>=ks.length-1).slice(0,3);const sub=L.filter(v=>cand[v].n>=3&&main.indexOf(v)<0).slice(0,3);
   return zpc[b]={fam:['十字','X','隔壁','同尾'][best.fi],main,sub}}
  /* 2026-10-08 推薦：排行、學距、關聯（精華）、非連、柱碰主牌、柱碰副牌 6 組放一起，看每顆出現在幾組→20 招有幾招推→號碼小，不選連莊牌，取前 3 顆 */
- function myPick(b,groups,W){const last=new Set(nums[b]);const c={},v20={};for(let k=0;k<M.length;k++)get(k,b).forEach(v=>{v20[v]=(v20[v]||0)+1});groups.forEach((a,q)=>new Set(a).forEach(v=>{c[v]=(c[v]||0)+(W?W[q]:1)}));/* 2026-10-08 使用者：連莊牌可以選，但 3 顆裡最多 1 顆 */const L=Object.keys(c).map(Number).sort((x,y)=>(c[y]-c[x])||(v20[y]||0)-(v20[x]||0)||x-y);const out=[];let nz=0;for(const v of L){if(out.length>=3)break;if(last.has(v)){if(nz>=1)continue;nz++}out.push(v)}return out}
+ /* 2026-10-09 使用者：推薦改 4 顆（偏移跟著 4 顆）；連莊牌仍最多 1 顆 */const PICK_N=4;function myPick(b,groups,W){const last=new Set(nums[b]);const c={},v20={};for(let k=0;k<M.length;k++)get(k,b).forEach(v=>{v20[v]=(v20[v]||0)+1});groups.forEach((a,q)=>new Set(a).forEach(v=>{c[v]=(c[v]||0)+(W?W[q]:1)}));/* 2026-10-08 使用者：連莊牌可以選，但 3 顆裡最多 1 顆 */const L=Object.keys(c).map(Number).sort((x,y)=>(c[y]-c[x])||(v20[y]||0)-(v20[x]||0)||x-y);const out=[];let nz=0;for(const v of L){if(out.length>=PICK_N)break;if(last.has(v)){if(nz>=1)continue;nz++}out.push(v)}return out}
  /* 2026-10-08 推薦的自我檢討與修正：每期先回頭看 6 組（排行、學距、關聯、非連、柱碰主、柱碰副）最近 30 期推的牌三期內開出率，
     除以隨機機率當權重（最低 0.5、最高 1.5）；最近準的那組票數加重，不準的減輕，再算推薦。只用當時已開出的資料。 */
  /* 關鍵三只用在 539、天天樂（回測六合彩、大樂透加了變差） */const KT_ON=(gk==='539'||gk==='daily');const GN=['排行','學距','關聯','非連','柱碰主','柱碰副'].concat(KT_ON?['關鍵三']:[]);/* 2026-10-09 使用者：關鍵第三期。前k期有、前2k期有、前3k期沒有（k=1,2,3，最遠看到前9期），本期就是關鍵第三期；符合越多個k越優先，同分k小者優先，最多3顆 */function ktPick(b){if(!KT_ON)return[];const sc={};for(let k=1;k<=3;k++){const A=nums[b-k+1],B=nums[b-2*k+1],C=nums[b-3*k+1];if(!A||!B||!C)continue;const sb=new Set(B),sc3=new Set(C);A.forEach(v=>{if(sb.has(v)&&!sc3.has(v)){if(!sc[v])sc[v]={n:0,k:k};sc[v].n++}})}return Object.keys(sc).map(Number).sort((x,y)=>(sc[y].n-sc[x].n)||(sc[x].k-sc[y].k)||x-y).slice(0,3)}const cc={};
@@ -272,7 +272,7 @@ function sizes(){const app=document.getElementById('app');const W=app.clientWidt
  const s=Math.floor(Math.min(H*0.84,(W-side-9*g-4-dW)/7.4));r.setProperty('--s',s+'px');
  const wr=probe('88','font-weight:700;font-size:100px;font-family:"Roboto Condensed","Arial Narrow","Noto Sans TC",sans-serif;font-variant-numeric:tabular-nums').width/100;
  r.setProperty('--fs',(Math.min(s*0.9,s*0.9/wr)).toFixed(1)+'px');
- const s2=Math.floor(Math.min(2*H*0.86,(W-side-6*g-8)/3.3));r.setProperty('--s2',s2+'px');const s3=Math.floor(Math.min(2*H*0.86,(W-side-15*g-14)/6));r.setProperty('--s3',s3+'px');r.setProperty('--fs3',(Math.min(s3*0.9,s3*0.9/wr)).toFixed(1)+'px');r.setProperty('--fs2',(Math.min(s2*0.88,s2*0.9/wr)).toFixed(1)+'px')}
+ const s2=Math.floor(Math.min(2*H*0.86,(W-side-6*g-8)/3.3));r.setProperty('--s2',s2+'px');const s3=Math.floor(Math.min(2*H*0.86,(W-side-19*g-14)/8));r.setProperty('--s3',s3+'px');r.setProperty('--fs3',(Math.min(s3*0.9,s3*0.9/wr)).toFixed(1)+'px');r.setProperty('--fs2',(Math.min(s2*0.88,s2*0.9/wr)).toFixed(1)+'px')}
 /* 畫面只建立一次，之後換日期時只更新格子裡的數字（不重畫），捲動才會順 */
 const REF={};let moved=false;
 function build(){const app=document.getElementById('app');app.innerHTML='';
@@ -281,7 +281,7 @@ function build(){const app=document.getElementById('app');app.innerHTML='';
   const r1=el('div','row dr blk z-top zg-'+g);const sd=el('div','side');const nb=el('button','name');nb.innerHTML='<b>'+G.name+'</b>';nb.onclick=()=>{if(!moved)openSheet(g)};sd.appendChild(nb);r1.appendChild(sd);
   const m1=el('div','mid');R.dr=[];for(let i=0;i<G.dr;i++){const x=el('div','sq');m1.appendChild(x);R.dr.push(x)}if(G.sp){m1.appendChild(el('span','plus','+'));R.sp=el('div','sq sp');m1.appendChild(R.sp)}R.dt=el('small','dt','<span></span><span></span>');R.dt.onclick=()=>{if(!moved)openSheet(g)};m1.appendChild(R.dt);r1.appendChild(m1);
   const mk=(cls,lab,n,last)=>{const r=el('div','row '+cls+' blk zg-'+g+(last?' z-bot':''));const s=el('div','side');s.appendChild(el('span','lab'+(lab.indexOf('<br>')>=0?' two':''),lab));r.appendChild(s);const m=el('div','mid');const arr=[];for(let i=0;i<n;i++){const x=el('div','sq');m.appendChild(x);arr.push(x)}const none=el('span','none','無');m.appendChild(none);r.appendChild(m);const tag=el('span','tag','暫停參考');r.appendChild(tag);return{r,m,arr,none,tag}};
-  R.rk=mk('rk','排行',6);R.rk.arr.slice(3).forEach(x=>x.classList.add('xj'));R.rk.m.insertBefore(el('span','xjl','學距'),R.rk.arr[3]);R.rl=mk('rl','關聯',6);R.my=mk('my','推薦',6,true);R.shl=el('span','shl','');R.my.m.insertBefore(R.shl,R.my.arr[3]);R.my.arr[3].classList.add('sh1');R.rl.arr.slice(3).forEach(x=>x.classList.add('nl'));R.rl.m.insertBefore(el('span','xjl','非連'),R.rl.arr[3]);R.nb=nb;R.mids=[m1,R.my.m];
+  R.rk=mk('rk','排行',6);R.rk.arr.slice(3).forEach(x=>x.classList.add('xj'));R.rk.m.insertBefore(el('span','xjl','學距'),R.rk.arr[3]);R.rl=mk('rl','關聯',6);R.my=mk('my','推薦',8,true);R.shl=el('span','shl','');R.my.m.insertBefore(R.shl,R.my.arr[4]);R.my.arr[4].classList.add('sh1');R.rl.arr.slice(3).forEach(x=>x.classList.add('nl'));R.rl.m.insertBefore(el('span','xjl','非連'),R.rl.arr[3]);R.nb=nb;R.mids=[m1,R.my.m];
   /* 2026-10-08 使用者：主畫面只顯示「推薦」3 顆，一顆佔兩列高度放大；排行、學距、關聯、非連不顯示（仍照常計算，成效紀錄照記） */
   [r1,R.my.r].forEach(x=>app.appendChild(x));app.appendChild(el('div','row hr'));REF[g]=R});
  const c=el('div','row counts');[['lzs','','連莊牌'],['','#E0313D','下一期'],['','#2F6FEB','下二期'],['','#1E9E55','下三期']].forEach(a=>{const d=el('div','lgi','<i class="'+a[0]+'"'+(a[1]?' style="background:'+a[1]+'"':'')+'></i>'+a[2]);c.appendChild(d)});app.appendChild(c)}
@@ -303,7 +303,7 @@ function fill(g){const E=ENG[g],G=E.G,R=REF[g];const t=VIEW[g];const future=t>E.
  R.rl.arr.forEach((x,i)=>{const list=i<3?rec.ess.slice().sort((a,b)=>a-b):rec.nl;const v=list[i<3?i:i-3];if(v!==undefined){x.style.display='';x.textContent=p2(v);mark(x,v)}else x.style.display='none'});R.rl.none.style.display=rec.ess.length?'none':'';
  /* 2026-10-09 偏移啟動（上期推薦全沒中）時：第二列顯示推薦、第三列顯示偏移；推薦有中、不需要偏移時，恢復一顆佔兩列的大推薦 */
  const sh=rec.show;const act=!!(sh&&sh.g&&sh.g.length);R.my.r.classList.toggle('act',act);R.shl.style.display='none';
- R.my.arr.forEach((x,i)=>{const v=i<3?rec.my[i]:(act?sh.g[i-3]:undefined);if(v!==undefined){x.style.display='';x.textContent=p2(v);mark(x,v)}else x.style.display='none'});R.my.none.style.display=rec.my.length?'none':'';R.my.tag.style.display='none';
+ R.my.arr.forEach((x,i)=>{const v=i<4?rec.my[i]:(act?sh.g[i-4]:undefined);if(v!==undefined){x.style.display='';x.textContent=p2(v);mark(x,v)}else x.style.display='none'});R.my.none.style.display=rec.my.length?'none':'';R.my.tag.style.display='none';
  R.rk.tag.style.display=future&&(sum.pauseRank||sum.pauseXj)?'':'none';R.rl.tag.style.display=future&&(sum.pauseRel||sum.pauseNl)?'':'none'}
 function render(){ORDER.forEach(fill)}
 function step(d){const v=Math.max(0,Math.min(KMAX,K-d));if(v!==K){K=v;applyCursor();render();return true}return false}
@@ -434,6 +434,7 @@ build();sizes();render();addEventListener('resize',()=>{sizes()});setTimeout(syn
   - 號碼錯了 → 修正 data.json 後，手機裡已存的錯誤期數需清除 App 的網站資料（localStorage）才會換掉。
 偏移回溯（2026-10-09 改）：八卦輪偏移量看最近 9 期（最近一期 ×9、往前每期少 1）。偏移連中加權、上期沒中加權都回測過，沒有效果，不採用。
 關鍵第三期（2026-10-09，只用在 539、天天樂）：前k期有、前2k期有、前3k期沒有（k=1,2,3，最遠前 9 期）的號碼，本期是關鍵第三期；符合越多個k越優先、同分k小者優先，最多 3 顆，當推薦交叉比對第 7 組（偏移變第 8 組），權重同樣看最近 30 期三期內表現（0.5～1.5）。回測近 300 期下一期中≥1：539 49.1→50.5%、天天樂 47.2→49.1%；六合彩、大樂透加了反而變差，所以不加。
+推薦顆數（2026-10-09 改）：推薦由 3 顆改 4 顆，偏移跟著 4 顆（偏移啟動時一列 8 顆，大小一樣）；連莊牌最多 1 顆。回測近 200～290 期只看推薦下一期中≥1：539 38.0→48.4%、天天樂 35.5→49.1%、六合彩 31.7→41.7%、大樂透 36.6→48.9%；比隨機同顆數多 +4.8／+5.5／−0.1／+7.1。
 -->
 </body>
 </html>
