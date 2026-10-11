@@ -293,7 +293,7 @@ function build(){const app=document.getElementById('app');app.innerHTML='';
   [r1,R.my.r,...R.mg.map(o=>o.r)].forEach(x=>app.appendChild(x));app.appendChild(el('div','row hr'));REF[g]=R});
  const c=el('div','row counts');[['lzs','','連莊牌'],['','#E0313D','下一期'],['','#2F6FEB','下二期'],['','#1E9E55','下三期'],['em','<span style="color:#FFD700;font-family:Segoe UI Symbol,Noto Sans Symbols 2,Apple Symbols,sans-serif;font-size:1.15em;text-shadow:0 0 1px rgba(0,0,0,.6)">♛</span>','重點'],['em','🔥','最強']].forEach(a=>{const d=el('div','lgi',a[0]==='em'?'<b class="lge">'+a[1]+'</b>'+a[2]:'<i class="'+a[0]+'"'+(a[1]?' style="background:'+a[1]+'"':'')+'></i>'+a[2]);c.appendChild(d)});app.appendChild(c)}
 const RC={};function recAt(g,bar){const k=g+'_'+bar;if(!RC[k])RC[k]=ENG[g].recommend(bar);return RC[k]}
-function fill(g){const E=ENG[g],G=E.G,R=REF[g];/* 2026-10-10 使用者：合流畫面只看最新預測，不顯示已開的牌 */const t=MERGE?E.e+1:VIEW[g];const future=t>E.e;const rec=recAt(g,t-1);const sum=E.summary(REC[g]);
+function fill(g){const E=ENG[g],G=E.G,R=REF[g];/* 2026-10-11 使用者：互補畫面也要能像首頁一樣捲動看以前（開出的號碼照樣變色） */const t=VIEW[g];const future=t>E.e;const rec=recAt(g,t-1);const sum=E.summary(REC[g]);
  const drawn=future?null:E.rows[t];const dateTxt=future?nextDraw(g,E.rows[E.e][0]):md(E.rows[t][0]);const hs=new Set(drawn?drawn[1]:[]);
  /* 2026-10-08 開出顏色：第一期紅、第二期藍、第三期綠（以最早開出的那期為準） */
  const futs=[0,1,2].map(k=>t+k<=E.e?new Set(E.rows[t+k][1]):new Set());const hk=v=>futs[0].has(v)?1:futs[1].has(v)?2:futs[2].has(v)?3:0;
