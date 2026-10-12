@@ -4,6 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>好運旺旺進財來</title>
+<!-- 2026-10-12 使用者：程式一年後自動失效（台灣時間 2027-10-12 00:00 起停用） -->
+<style>html.expired body>*{display:none!important}html.expired body::before{content:"此程式已於 2027/10/12 到期，停止使用";display:block;margin:40vh 24px 0;text-align:center;font:600 20px/1.6 system-ui,sans-serif;color:#E7ECF3}html.expired body{background:#0E1726}</style>
+<script>(function(){var END=Date.UTC(2027,9,11,16,0,0);function c(){if(Date.now()>=END){document.documentElement.classList.add('expired');window.APP_EXPIRED=true;return true}return false}c();setInterval(c,60000);document.addEventListener('visibilitychange',c)})();</script>
 <!-- 2026-10-07 網址 App：獨立儲存庫 haoyun-app（與抓539 的 zhuapai-app 分開，才能各自安裝） -->
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#0E1726">
@@ -346,7 +349,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')document.getElementB
 const GCFG={'539':{dr:5,mx:39,sp:false},daily:{dr:5,mx:39,sp:false},mark6:{dr:6,mx:49,sp:true},lotto:{dr:6,mx:49,sp:true}};
 function reinit(){ORDER.forEach(g=>{ENG[g]=makeEngine(g,DATA[g],TRACK_START[g]);REC[g]=ENG[g].records()});for(const k in RC)delete RC[k];KMAX=Math.max(...ORDER.map(g=>ENG[g].e+1-46));applyCursor();build();sizes();render();warmK=1;setTimeout(warm,300)}
 let syncing=false;
-async function sync(){if(syncing)return;syncing=true;try{
+async function sync(){if(syncing||window.APP_EXPIRED)return;syncing=true;try{
  const ctl=window.AbortController?new AbortController():null;const tm=setTimeout(()=>{if(ctl)ctl.abort()},10000);
  const res=await fetch(GATE+'&app=haoyun&v=v1.0&_ts='+Date.now(),{cache:'no-store',signal:ctl?ctl.signal:undefined});clearTimeout(tm);
  if(!res.ok){SYNC_NOTE='雲端回應 '+res.status+'，使用手機裡的資料';return}
