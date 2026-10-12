@@ -461,5 +461,8 @@ build();sizes();render();addEventListener('resize',()=>{sizes()});setTimeout(syn
 顏色調整（2026-10-09 使用者）：連莊牌外框由綠色改紫色（#A855F7），關鍵三期小星點改亮黃色（#FFEA00；2026-10-10 使用者改亮水藍色 #00E5FF，避免跟金色皇冠相近）加黑邊、放大並移到格子外角（粉色在紅底上看不清楚），避免跟開出顏色（紅、藍、綠）混淆。
 皇冠換色（2026-10-09；2026-10-10 使用者改亮金色）：重點觀察的皇冠改用亮金色 ♛（#FFD700，之前粉紅、亮青）加黑邊，跟黃色星點、橘色 🔥 區分。
 -->
+<!-- 2026-10-12 使用者：安卓還沒安裝時才顯示「安裝到桌面」按鈕，已安裝就不顯示 -->
+<button id="instBtn" type="button" style="display:none;position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:50;padding:12px 22px;border:0;border-radius:999px;background:#E0A93A;color:#1A1205;font:700 17px/1.2 system-ui,sans-serif;box-shadow:0 6px 18px rgba(0,0,0,.45)">📲 安裝到桌面</button>
+<script>(function(){var b=document.getElementById('instBtn'),ev=null;var installed=function(){return (window.matchMedia&&matchMedia('(display-mode: standalone)').matches)||navigator.standalone===true};if(!/Android/i.test(navigator.userAgent)||installed())return;window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();ev=e;if(!window.APP_EXPIRED){b.style.display='';document.body.style.paddingBottom='76px'}});b.onclick=function(){if(!ev)return;b.style.display='none';ev.prompt();ev.userChoice.then(function(r){if(r.outcome!=='accepted')b.style.display='';else{ev=null;document.body.style.paddingBottom=''}}).catch(function(){})};window.addEventListener('appinstalled',function(){ev=null;b.style.display='none';document.body.style.paddingBottom=''})})();</script>
 </body>
 </html>
