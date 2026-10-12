@@ -6,7 +6,7 @@
 <title>好運旺旺進財來</title>
 <!-- 2026-10-12 使用者：程式一年後自動失效（台灣時間 2027-10-12 00:00 起停用） -->
 <style>html.expired body>*{display:none!important}html.expired body::before{content:"此程式已於 2027/10/12 到期，停止使用";display:block;margin:40vh 24px 0;text-align:center;font:600 20px/1.6 system-ui,sans-serif;color:#E7ECF3}html.expired body{background:#0E1726}</style>
-<script>(function(){var END=Date.UTC(2027,9,11,16,0,0);function c(){if(Date.now()>=END){document.documentElement.classList.add('expired');window.APP_EXPIRED=true;return true}return false}c();setInterval(c,60000);document.addEventListener('visibilitychange',c)})();</script>
+<script>/* 到期後只有發布新版（改 END）才能再用；防手機日期調回：記住看過的最晚時間，雲端資料出現到期日以後的開獎也算到期 */(function(){var END=Date.UTC(2027,9,11,16,0,0),K='hy_seen_max';function rd(){try{return +localStorage.getItem(K)||0}catch(e){return 0}}function wr(t){try{if(t>rd())localStorage.setItem(K,String(t))}catch(e){}}function exp(){document.documentElement.classList.add('expired');window.APP_EXPIRED=true}function c(){var t=Math.max(Date.now(),rd());wr(t);if(t>=END){exp();return true}return false}window.EXP_DATA=function(d){var t=Date.parse(String(d).slice(0,10)+'T00:00:00+08:00');if(!isNaN(t)){wr(t);if(t>=END)exp()}};c();setInterval(c,60000);document.addEventListener('visibilitychange',c)})();</script>
 <!-- 2026-10-07 網址 App：獨立儲存庫 haoyun-app（與抓539 的 zhuapai-app 分開，才能各自安裝） -->
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#0E1726">
@@ -251,7 +251,7 @@ function normalizeCrawlerDate(raw,fallbackCheckedAt){
   }
   return null
 }
-const AUK='haoyun_auto_v1';let AUTO=(()=>{try{return JSON.parse(localStorage.getItem(AUK)||'{}')||{}}catch(e){return{}}})();function autoTune(){let changed=false;const gs=ORDER.slice();const save=()=>{try{localStorage.setItem(AUK,JSON.stringify(AUTO))}catch(e){}};const step=()=>{const g=gs.shift();if(!g){save();if(changed)reinit();return}const E=ENG[g];const A=E.e;const cur=AUTO[g]||{};if(cur.A!==undefined&&A-cur.A<30&&A>=cur.A){setTimeout(step,30);return}const gw=E.evalGW(A),bd=E.evalBD(A);if(gw!==(cur.gw||30)||bd!==(cur.bd||9))changed=true;AUTO[g]={A,gw,bd};setTimeout(step,300)};step()}const ENG={};ORDER.forEach(g=>ENG[g]=makeEngine(g,DATA[g],TRACK_START[g]));
+const AUK='haoyun_auto_v1';let AUTO=(()=>{try{return JSON.parse(localStorage.getItem(AUK)||'{}')||{}}catch(e){return{}}})();function autoTune(){let changed=false;const gs=ORDER.slice();const save=()=>{try{localStorage.setItem(AUK,JSON.stringify(AUTO))}catch(e){}};const step=()=>{const g=gs.shift();if(!g){save();if(changed)reinit();return}const E=ENG[g];const A=E.e;const cur=AUTO[g]||{};if(cur.A!==undefined&&A-cur.A<30&&A>=cur.A){setTimeout(step,30);return}const gw=E.evalGW(A),bd=E.evalBD(A);if(gw!==(cur.gw||30)||bd!==(cur.bd||9))changed=true;AUTO[g]={A,gw,bd};setTimeout(step,300)};step()}ORDER.forEach(g=>{const A=DATA[g];if(A&&A.length&&window.EXP_DATA)EXP_DATA(A[A.length-1][0])});const ENG={};ORDER.forEach(g=>ENG[g]=makeEngine(g,DATA[g],TRACK_START[g]));
 const REC={};ORDER.forEach(g=>{REC[g]=ENG[g].records()});
 /* 目前看的「預測期」：e+1＝下一期（尚未開獎，格子空白）；往下滑回溯到已開獎的期數 */
 const VIEW={};ORDER.forEach(g=>VIEW[g]=ENG[g].e+1);
@@ -363,6 +363,7 @@ async function sync(){if(syncing||window.APP_EXPIRED)return;syncing=true;try{
    if(nums.length!==C.dr||nums.some(n=>n<1||n>C.mx))continue;const key=nums.slice().sort((a,b)=>a-b).join(',');if(recent[key])continue;
    const row=[d,nums.slice().sort((a,b)=>a-b)];if(C.sp){const s=parseInt(rec.special_number,10);if(!isNaN(s))row.push(s)}rows.push(row)}
   added+=mergeRows(g,rows)}
+ ORDER.forEach(g=>{const A=DATA[g];if(A&&A.length&&window.EXP_DATA)EXP_DATA(A[A.length-1][0])});if(window.APP_EXPIRED)return;
  const c={};ORDER.forEach(g=>{c[g]=DATA[g].filter(r=>r[0]>EMBED_LAST[g])});lsSet(c);
  const t=new Date();SYNC_NOTE='雲端同步 '+(t.getMonth()+1)+'/'+t.getDate()+' '+String(t.getHours()).padStart(2,'0')+':'+String(t.getMinutes()).padStart(2,'0');
  if(added)reinit()
