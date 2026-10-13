@@ -102,7 +102,7 @@ body{margin:0;height:100%;background:var(--bg);color:var(--ink);overflow:hidden;
 .mb.h1{background:#E0313D;border-color:#E0313D;color:#fff}.mb.h2{background:#2F6FEB;border-color:#2F6FEB;color:#fff}.mb.h3{background:#1E9E55;border-color:#1E9E55;color:#fff}
 .lg{display:inline-block;width:11px;height:11px;border-radius:3px;vertical-align:-1px;margin:0 3px 0 8px}
 .mb sup{position:absolute;top:-6px;right:-6px;font-size:10px;color:var(--red);font-weight:700}
-.mb.h sup{color:var(--red)}
+.mb.h sup{color:var(--red)}/* 2026-10-14 01:45 使用者「字體太小看不清楚」：成效紀錄整頁字放大 */#sheet .sh-head h2{font-size:22px}#sheet .close{font-size:17px;padding:8px 16px}#sheet .res{font-size:15px}#sheet .sum{gap:8px}#sheet .sum h3{font-size:17px}#sheet .sum p{font-size:22px}#sheet .sum small{font-size:15px;line-height:1.5}#sheet .sum .cur{gap:3px}#sheet .sum .cur span{font-size:15px;flex:0 0 100%}#sheet .sum .cur b{width:31px;height:31px;font-size:18px}#sheet .sum .cur i{font-size:15px}#sheet .cmt h3{font-size:19px}#sheet .cmt p{font-size:18px;line-height:1.65}#sheet .cmt .rk{font-size:17px;gap:6px 14px}#sheet .cmt small{font-size:15px}#sheet .rec .d{font-size:17px}#sheet .rec .ln{gap:7px;margin:6px 0}#sheet .rec .ln>span:first-child{flex:0 0 80px;font-size:16px}#sheet .mb{width:36px;height:36px;font-size:20px!important}#sheet .rec .ln .res{font-size:15px}
 .res{font-size:12px;color:var(--mute)}
 .empty{color:var(--mute);font-size:14px;line-height:1.7;padding:20px 0}
 @media (prefers-reduced-motion:no-preference){#sheet.open{animation:up .18s ease-out}@keyframes up{from{transform:translateY(12px);opacity:.6}to{transform:none;opacity:1}}}
@@ -461,6 +461,7 @@ build();sizes();render();addEventListener('resize',()=>{sizes()});setTimeout(syn
 539 最強兩顆（2026-10-09）：只在 539 偏移啟動時，從推薦 4＋偏移 4 用關鍵第三期（k=1,2,3）挑最強 2 顆，同分看重複牌、再看原順序，號碼下方顯示 🔥（不用金框，避免跟連莊綠框衝突）。回測 136 期：每顆三期內 43.4%、下一期 16.9%（其他號碼 35.6%、14.4%）。其他彩券回測無效，不標。
 暗偏移（2026-10-09 使用者）：偏移沒啟動時，程式照偏移的算法另算一組（八卦輪、近 9 期加權，排除不偏移），只用來找 👑（推薦 4 顆中與它重複者）和 539 的 🔥（推薦 4＋暗偏移 4 用關鍵第三期挑 2 顆），畫面不顯示暗偏移本身。
 標示與星等改版（2026-10-09 使用者）：👑、🔥 四種彩券都算；2026-10-10 起每期都顯示（原本「最近 9 期開出數÷隨機期望 ≥1 才顯示」已取消：回測該門檻分不出準不準，長期四種彩券 👑、🔥 都高於隨機）。星等不再四種互比，改成該彩券自己最近 9 期推薦的好壞：開出數÷隨機期望 ≥1.25 四顆、≥1 三顆、≥0.75 兩顆、其餘一顆。
+成效紀錄字體（2026-10-14 01:45 使用者「字體太小看不清楚」）：成效紀錄整頁的字放大（評語 18px、排行 17px、格子百分比 22px、說明 15px、號碼格 36px）。
 成效紀錄評語（2026-10-14 01:32 使用者「每一期成效紀錄裡都要有這樣的評語」）：成效紀錄最上面自動產生評語，依各方式的準確倍數（每顆三期內開出率÷隨機，只算三期都開完的期數）：2026-10-14 01:45 使用者「只要 10 期就好，我要看近期公式準確度評語」改成只看最近 10 期：①最準的三種（倍數、顆數、有中期數）；②最近很穩（有中期數九成以上，最多三種）；③偏弱（低於 0.8 倍，最多四種）；④15 種 10 期完整排行。每次開獎後打開就重算。
 成效紀錄偏移（2026-10-14 01:17 使用者「偏移不管有沒有啟動成效紀錄裡也是要顯示」）：偏移沒啟動的期數也列出號碼（用暗偏移，標「未啟動」），上方格子下一期號碼也一樣；偏移格的準確率照舊只算啟動的期數，另加一行「含未啟動」的準確率。
 成效紀錄各格號碼（2026-10-14 01:10 使用者「這裡也紀錄各自的號碼」）：成效紀錄上方每一格下面列出該方式下一期要推的號碼（偏移沒啟動寫「未啟動」）。
